@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { EventBus } from '../game/EventBus';
 import { GameState } from '../data/types';
 import { PlayerHand } from './PlayerHand';
+import { RuleDisplay } from './RuleDisplay';
 
 /* ──────────────────────────────────────────────────────────────
-   GameUI - Wrapper for game overlay (PlayerHand, etc.)
+   GameUI - Wrapper for game overlay (PlayerHand, RuleDisplay, etc.)
    Subscribes to game-state-changed from Phaser Game scene
    ────────────────────────────────────────────────────────────── */
 
@@ -31,6 +32,9 @@ export function GameUI({ visible }: GameUIProps) {
 
   return (
     <div className="game-ui-overlay">
+      {gameState && (
+        <RuleDisplay activeRules={gameState.activeRules} />
+      )}
       <PlayerHand gameState={gameState} />
     </div>
   );

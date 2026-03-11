@@ -33,7 +33,7 @@ export class Game extends Scene {
     this.engine = new GameEngine({
       blueHand,
       redHand,
-      activeRules: [RuleType.Basic],
+      activeRules: [RuleType.Basic, RuleType.Same, RuleType.Plus, RuleType.Elemental],
       blueIsAI: false,
       redIsAI: false,
     });

@@ -25,18 +25,31 @@ export const OPPOSITE_DIRECTION: Record<Direction, Direction> = {
 };
 
 /**
- * Create an empty 3x3 board with all cells empty and no elements.
+ * Default elemental layout for 3x3 board (FF8-style).
+ * Corners and edges have elements; center is None.
  */
-export function createBoard(): Board {
+export const DEFAULT_ELEMENT_LAYOUT: Element[][] = [
+  [Element.Fire, Element.None, Element.Ice],
+  [Element.None, Element.None, Element.None],
+  [Element.Thunder, Element.None, Element.Water],
+];
+
+/**
+ * Create an empty 3x3 board with all cells empty.
+ * @param elementLayout Optional 3x3 grid of elements; if omitted, all cells are Element.None
+ */
+export function createBoard(elementLayout?: Element[][]): Board {
   const board: Board = [];
   for (let row = 0; row < 3; row++) {
     board[row] = [];
     for (let col = 0; col < 3; col++) {
+      const element =
+        elementLayout?.[row]?.[col] ?? Element.None;
       board[row][col] = {
         row,
         col,
         card: null,
-        element: Element.None,
+        element,
       };
     }
   }

@@ -29,6 +29,45 @@ body {
     pointer-events: none;
 }
 
+.rule-display {
+    pointer-events: auto;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rule-display-title {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.rule-display-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rule-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    color: #cbd5e1;
+}
+
+.rule-display-elements {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.rule-element-hint {
+    font-style: italic;
+}
+
 .game-ui-overlay .player-hand {
     pointer-events: auto;
     position: absolute;

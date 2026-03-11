@@ -1,47 +1,54 @@
 import { Board, CardDef, PlayerSide, RuleType } from '../data/types';
-import { BasicRule, CaptureResult, CaptureRule } from './rules/BasicRule';
 import { cloneBoard } from './Board';
+import { BasicRule, CaptureResult, CaptureRule } from './rules/BasicRule';
+import { SameRule } from './rules/SameRule';
+import { PlusRule } from './rules/PlusRule';
+import { ElementalRule } from './rules/ElementalRule';
+import { resolveComboCascade } from './CaptureResolver';
 
 /* ──────────────────────────────────────────────────────────────
    Rule Engine for Triple Trio
    Composes capture rules and applies captures to the board
+   Evaluation order: Same → Plus → Basic; combo cascade after Same/Plus
    ────────────────────────────────────────────────────────────── */
 
-/**
- * Evaluates all active rules and applies captures.
- * In Phase 1, only BasicRule is active.
- * Phase 3 will add Same, Plus, and Elemental rules with specific evaluation order.
- */
 export class RuleEngine {
   private readonly rules: CaptureRule[];
+  private readonly basicRule: BasicRule;
+  private readonly hasSameOrPlus: boolean;
 
-  constructor(_activeRules: RuleType[]) {
-    this.rules = this.buildRules(_activeRules);
+  constructor(activeRules: RuleType[]) {
+    this.rules = this.buildRules(activeRules);
+    this.basicRule = new BasicRule(activeRules);
+    this.hasSameOrPlus =
+      activeRules.includes(RuleType.Same) || activeRules.includes(RuleType.Plus);
   }
 
   /**
-   * Build the rule instances based on active rules.
-   * Phase 1: Only BasicRule (always included).
-   * Phase 3: Will conditionally add Same, Plus, Elemental with order: Elemental > Same > Plus > Basic.
+   * Build rule instances. Order: Same, Plus, Basic.
+   * Elemental is a modifier applied within other rules when active.
    */
-  private buildRules(_activeRules: RuleType[]): CaptureRule[] {
+  private buildRules(activeRules: RuleType[]): CaptureRule[] {
     const rules: CaptureRule[] = [];
 
-    // BasicRule is always active regardless of the activeRules list
-    rules.push(new BasicRule());
+    if (activeRules.includes(RuleType.Same)) {
+      rules.push(new SameRule(activeRules));
+    }
+    if (activeRules.includes(RuleType.Plus)) {
+      rules.push(new PlusRule(activeRules));
+    }
+    rules.push(new BasicRule(activeRules));
 
-    // Phase 3: Uncomment and expand:
-    // if (_activeRules.includes(RuleType.Same)) rules.push(new SameRule());
-    // if (_activeRules.includes(RuleType.Plus)) rules.push(new PlusRule());
-    // if (_activeRules.includes(RuleType.Elemental)) rules.push(new ElementalRule());
+    if (activeRules.includes(RuleType.Elemental)) {
+      rules.push(new ElementalRule());
+    }
 
     return rules;
   }
 
   /**
    * Evaluate all active rules for a placed card.
-   * Returns a deduped list of cells to capture (by row,col).
-   * In Phase 1, only BasicRule is active so no deduplication needed.
+   * If Same or Plus produce captures, runs combo cascade.
    */
   evaluate(
     board: Board,
@@ -51,37 +58,68 @@ export class RuleEngine {
     placingPlayer: PlayerSide
   ): CaptureResult[] {
     const capturesByCell = new Map<string, CaptureResult>();
+    let sameOrPlusCaptures: CaptureResult[] = [];
 
-    // Run each rule and collect captures
     for (const rule of this.rules) {
-      const ruleCapturesResult = rule.evaluate(board, placedRow, placedCol, placedCard, placingPlayer);
+      const ruleCaptures = rule.evaluate(
+        board,
+        placedRow,
+        placedCol,
+        placedCard,
+        placingPlayer
+      );
 
-      for (const capture of ruleCapturesResult) {
+      for (const capture of ruleCaptures) {
         const key = `${capture.row},${capture.col}`;
-        // Only add if not already captured by a previous rule
         if (!capturesByCell.has(key)) {
           capturesByCell.set(key, capture);
+          if (
+            this.hasSameOrPlus &&
+            (capture.byRule === RuleType.Same || capture.byRule === RuleType.Plus)
+          ) {
+            sameOrPlusCaptures.push(capture);
+          }
         }
       }
     }
 
-    return Array.from(capturesByCell.values());
+    let finalCaptures = Array.from(capturesByCell.values());
+
+    if (sameOrPlusCaptures.length > 0) {
+      const boardAfterInitial = this.applyCaptures(board, finalCaptures);
+      const { captures: cascadeCaptures } = resolveComboCascade(
+        boardAfterInitial,
+        sameOrPlusCaptures,
+        this.basicRule
+      );
+
+      const cascadeByCell = new Map<string, CaptureResult>();
+      for (const c of finalCaptures) {
+        cascadeByCell.set(`${c.row},${c.col}`, c);
+      }
+      for (const c of cascadeCaptures) {
+        const key = `${c.row},${c.col}`;
+        if (!cascadeByCell.has(key)) {
+          cascadeByCell.set(key, c);
+        }
+      }
+      finalCaptures = Array.from(cascadeByCell.values());
+    }
+
+    return finalCaptures;
   }
 
   /**
    * Apply captures to the board: flip ownership of captured cells.
-   * Returns a new board with updated ownership.
    */
   applyCaptures(board: Board, captures: CaptureResult[]): Board {
-    let newBoard = cloneBoard(board);
-
+    const newBoard = cloneBoard(board);
     for (const capture of captures) {
       const cell = newBoard[capture.row][capture.col];
       if (cell.card !== null) {
         cell.card.owner = capture.newOwner;
       }
     }
-
     return newBoard;
   }
 }

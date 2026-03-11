@@ -334,13 +334,13 @@ Assets must follow this naming convention and folder structure:
 ### Phase 3 — Advanced Rules
 **Goal:** Full rule engine with Same, Plus, Elemental, combos.
 
-- [ ] Implement `SameRule.ts`
-- [ ] Implement `PlusRule.ts`
-- [ ] Implement `ElementalRule.ts`
-- [ ] Implement `CaptureResolver.ts` (combo/cascade)
-- [ ] Add element assignments to board cells
-- [ ] Create `elements.ts`
-- [ ] Add `RuleDisplay.tsx`
+- [x] Implement `SameRule.ts`
+- [x] Implement `PlusRule.ts`
+- [x] Implement `ElementalRule.ts`
+- [x] Implement `CaptureResolver.ts` (combo/cascade)
+- [x] Add element assignments to board cells
+- [x] Create `elements.ts`
+- [x] Add `RuleDisplay.tsx`
 
 **Deliverable:** Complete rule engine with all capture mechanics.
 **Complexity:** Medium

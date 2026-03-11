@@ -1,5 +1,5 @@
 import { GamePhase, GameState, Player, PlayerSide, RuleType, CardDef } from '../data/types';
-import { createBoard, cloneBoard, countCardsOwnedOnBoard } from './Board';
+import { createBoard, cloneBoard, countCardsOwnedOnBoard, DEFAULT_ELEMENT_LAYOUT } from './Board';
 
 /* ──────────────────────────────────────────────────────────────
    Game State Management for Triple Trio
@@ -10,6 +10,7 @@ import { createBoard, cloneBoard, countCardsOwnedOnBoard } from './Board';
  * Create the initial game state.
  * Both players start with 5 cards in hand, scoring 5 points each.
  * Blue always goes first.
+ * When Elemental rule is active, uses default element layout on board.
  */
 export function createInitialState(
   blueHand: CardDef[],
@@ -18,8 +19,11 @@ export function createInitialState(
   blueIsAI: boolean,
   redIsAI: boolean
 ): GameState {
+  const elementLayout = activeRules.includes(RuleType.Elemental)
+    ? DEFAULT_ELEMENT_LAYOUT
+    : undefined;
   return {
-    board: createBoard(),
+    board: createBoard(elementLayout),
     players: [
       {
         side: PlayerSide.Blue,

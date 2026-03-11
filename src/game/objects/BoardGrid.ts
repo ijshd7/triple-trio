@@ -1,15 +1,28 @@
 import { GameObjects } from 'phaser';
-import { Board, CardInstance } from '../../data/types';
+import { Board, CardInstance, Element } from '../../data/types';
 import { CardSprite } from './CardSprite';
 
 /* ──────────────────────────────────────────────────────────────
    BoardGrid - 3x3 grid rendering + cell click handling
    Layout: 120x120 cells, centered at (512, 384)
+   Element cells have distinct background colors when Elemental rule is active
    ────────────────────────────────────────────────────────────── */
 
 const CELL_SIZE = 120;
 const BOARD_OFFSET_X = 512 - (CELL_SIZE * 3) / 2;
 const BOARD_OFFSET_Y = 384 - (CELL_SIZE * 3) / 2;
+
+const ELEMENT_COLORS: Record<Element, number> = {
+  [Element.None]: 0x1e3a5f,
+  [Element.Fire]: 0x7f1d1d,
+  [Element.Ice]: 0x0c4a6e,
+  [Element.Thunder]: 0x4c1d95,
+  [Element.Earth]: 0x422006,
+  [Element.Water]: 0x164e63,
+  [Element.Wind]: 0x14532d,
+  [Element.Holy]: 0x713f12,
+  [Element.Poison]: 0x3f1d38,
+};
 
 export type CellClickCallback = (row: number, col: number) => void;
 
@@ -57,6 +70,7 @@ export class BoardGrid extends GameObjects.Container {
   /**
    * Sync the grid with the current board state.
    * Adds/updates/removes CardSprites as needed.
+   * Updates cell background colors based on element.
    */
   syncBoard(board: Board): void {
     const seen = new Set<string>();
@@ -65,6 +79,12 @@ export class BoardGrid extends GameObjects.Container {
       for (let col = 0; col < 3; col++) {
         const cell = board[row][col];
         const key = `${row},${col}`;
+
+        const cellRect = this.cells[row]?.[col];
+        if (cellRect) {
+          const color = ELEMENT_COLORS[cell.element] ?? ELEMENT_COLORS[Element.None];
+          cellRect.setFillStyle(color);
+        }
 
         if (cell.card) {
           seen.add(key);

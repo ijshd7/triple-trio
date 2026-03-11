@@ -1,9 +1,11 @@
-import { Board, CardDef, PlayerSide, RuleType } from '../../data/types';
+import { Board, CardDef, Direction, PlayerSide, RuleType } from '../../data/types';
 import { getAdjacentCells, getCardValue, OPPOSITE_DIRECTION } from '../Board';
+import { getElementalModifier } from '../../data/elements';
 
 /* ──────────────────────────────────────────────────────────────
    Basic Rule for Triple Trio
    Captures adjacent opposing cards when placed card has higher value
+   Uses elemental modifiers when Elemental rule is active
    ────────────────────────────────────────────────────────────── */
 
 /**
@@ -30,12 +32,32 @@ export interface CaptureRule {
   ): CaptureResult[];
 }
 
+function getValue(
+  board: Board,
+  row: number,
+  col: number,
+  card: CardDef,
+  direction: Direction,
+  useElemental: boolean
+): number {
+  const base = getCardValue(card, direction);
+  if (!useElemental) return base;
+  const cell = board[row][col];
+  const modifier = getElementalModifier(cell.element, card.element);
+  return Math.max(1, Math.min(10, base + modifier));
+}
+
 /**
  * Basic Rule: Compare placed card value to each adjacent opposing card.
  * If placed card's value > opposing card's value, capture it.
  */
 export class BasicRule implements CaptureRule {
   readonly ruleType = RuleType.Basic;
+  private readonly useElemental: boolean;
+
+  constructor(activeRules: RuleType[]) {
+    this.useElemental = activeRules.includes(RuleType.Elemental);
+  }
 
   evaluate(
     board: Board,
@@ -45,24 +67,31 @@ export class BasicRule implements CaptureRule {
     placingPlayer: PlayerSide
   ): CaptureResult[] {
     const captures: CaptureResult[] = [];
-
-    // Get all adjacent cells (in bounds)
     const neighbors = getAdjacentCells(board, placedRow, placedCol);
 
     for (const { cell, direction } of neighbors) {
-      // Only capture cells that have a card owned by the opponent
       if (cell.card === null || cell.card.owner === placingPlayer) {
         continue;
       }
 
-      // Get the placed card's value facing this direction
-      const placedValue = getCardValue(placedCard, direction);
-
-      // Get the neighbor card's value facing back toward the placed card
+      const placedValue = getValue(
+        board,
+        placedRow,
+        placedCol,
+        placedCard,
+        direction,
+        this.useElemental
+      );
       const oppositeDir = OPPOSITE_DIRECTION[direction];
-      const neighborValue = getCardValue(cell.card.card, oppositeDir);
+      const neighborValue = getValue(
+        board,
+        cell.row,
+        cell.col,
+        cell.card.card,
+        oppositeDir,
+        this.useElemental
+      );
 
-      // If placed card is stronger, capture the neighbor
       if (placedValue > neighborValue) {
         captures.push({
           row: cell.row,
