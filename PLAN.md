@@ -348,13 +348,13 @@ Assets must follow this naming convention and folder structure:
 ### Phase 4 — Animations
 **Goal:** Polished visual feedback for all game actions.
 
-- [ ] Implement `CardAnimations.ts` (place, flip, capture, combo)
-- [ ] Card placement: slide from hand to cell
-- [ ] Card flip: scaleX tween with frame color swap
-- [ ] Capture glow/pulse effect
-- [ ] Staggered combo chain animations
-- [ ] Wire animation promises into Game scene turn flow
-- [ ] Add SFX triggers during animations
+- [x] Implement `CardAnimations.ts` (place, flip, capture, combo)
+- [x] Card placement: slide from hand to cell
+- [x] Card flip: scaleX tween with frame color swap
+- [x] Capture glow/pulse effect
+- [x] Staggered combo chain animations
+- [x] Wire animation promises into Game scene turn flow
+- [x] Add SFX triggers during animations
 
 **Deliverable:** Visually polished card interactions with sound.
 **Complexity:** Medium

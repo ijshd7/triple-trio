@@ -129,6 +129,13 @@ export class BoardGrid extends GameObjects.Container {
   }
 
   /**
+   * Get the CardSprite at a cell, if any.
+   */
+  getCardSprite(row: number, col: number): CardSprite | undefined {
+    return this.cardSprites.get(`${row},${col}`);
+  }
+
+  /**
    * Get cell center coordinates for animation (e.g. card placement).
    */
   static getCellCenter(row: number, col: number): { x: number; y: number } {

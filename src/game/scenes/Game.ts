@@ -7,20 +7,32 @@ import {
   GamePhase,
   RuleType,
   CardDef,
+  PlayerSide,
+  GameEvent,
 } from '../../data/types';
 import { CARDS } from '../../data/cards';
 import { getPlayer } from '../../engine/GameState';
+import {
+  getHandPosition,
+  animatePlace,
+  animateFlip,
+  animateCaptureGlow,
+  animateComboChain,
+} from '../animations/CardAnimations';
+import { BoardGrid as BoardGridStatic } from '../objects/BoardGrid';
+import { playSfx } from '../SoundManager';
+import { SFX_KEYS } from '../SoundManager';
 
 /* ──────────────────────────────────────────────────────────────
    Game Scene - Main gameplay with board rendering + engine wiring
-   Phase 2: Playable hotseat with basic capture, no animations
-   Hand is rendered by React PlayerHand; Phaser handles board only
+   Phase 4: Animations for placement, flip, capture, combo
    ────────────────────────────────────────────────────────────── */
 
 export class Game extends Scene {
   private engine: GameEngine | null = null;
   private boardGrid: BoardGrid | null = null;
   private selectedHandIndex: number | null = null;
+  private isAnimating = false;
 
   constructor() {
     super('Game');
@@ -91,25 +103,77 @@ export class Game extends Scene {
     EventBus.emit('card-selection-changed', handIndex);
   }
 
-  private onCellClick(row: number, col: number) {
-    if (!this.engine || this.selectedHandIndex === null) return;
+  private async onCellClick(row: number, col: number) {
+    if (!this.engine || this.selectedHandIndex === null || this.isAnimating) return;
 
     if (!this.engine.isValidMove(this.selectedHandIndex, row, col)) {
       return;
     }
 
-    const result = this.engine.placeCard(this.selectedHandIndex, row, col);
+    const handIndex = this.selectedHandIndex;
+    const handSize = getPlayer(this.engine.getState(), this.engine.getState().currentTurn).hand
+      .length;
     this.selectedHandIndex = null;
     EventBus.emit('card-selection-changed', null);
+    this.isAnimating = true;
 
-    this.syncFromState(result.newState);
+    const result = this.engine.placeCard(handIndex, row, col);
+    const { newState, events } = result;
 
-    if (result.newState.phase === GamePhase.GameOver) {
-      this.scene.start('GameOver', {
-        winner: result.newState.winner,
-        blueScore: result.newState.players[0].score,
-        redScore: result.newState.players[1].score,
+    this.syncFromState(newState);
+
+    const cellCenter = BoardGridStatic.getCellCenter(row, col);
+    const handPos = getHandPosition(handIndex, handSize);
+
+    const placedCard = this.boardGrid?.getCardSprite(row, col);
+    if (placedCard) {
+      playSfx(this, SFX_KEYS.CARD_PLACE);
+      await animatePlace(this, placedCard, handPos.x, handPos.y, cellCenter.x, cellCenter.y);
+    }
+
+    const captureEvents = events.filter(
+      (e): e is GameEvent & { type: 'card-captured' } => e.type === 'card-captured'
+    );
+
+    if (captureEvents.length > 1) {
+      const cards: Array<{ sprite: import('../objects/CardSprite').CardSprite; newOwner: PlayerSide }> = [];
+      for (const ev of captureEvents) {
+        const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
+        if (card) {
+          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          card.setOwner(oldOwner);
+          cards.push({ sprite: card, newOwner: ev.newOwner });
+        }
+      }
+      await animateComboChain(this, cards, () => {
+        playSfx(this, SFX_KEYS.CARD_FLIP);
+        playSfx(this, SFX_KEYS.CARD_CAPTURE);
       });
+    } else {
+      for (const ev of captureEvents) {
+        const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
+        if (card) {
+          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          card.setOwner(oldOwner);
+          playSfx(this, SFX_KEYS.CARD_FLIP);
+          await animateFlip(this, card, ev.newOwner);
+          playSfx(this, SFX_KEYS.CARD_CAPTURE);
+          await animateCaptureGlow(this, card);
+        }
+      }
+    }
+
+    this.isAnimating = false;
+
+    if (newState.phase === GamePhase.GameOver) {
+      playSfx(this, newState.winner === 'draw' ? SFX_KEYS.DEFEAT : SFX_KEYS.VICTORY);
+      this.scene.start('GameOver', {
+        winner: newState.winner,
+        blueScore: newState.players[0].score,
+        redScore: newState.players[1].score,
+      });
+    } else {
+      EventBus.emit('game-state-changed', newState);
     }
   }
 
