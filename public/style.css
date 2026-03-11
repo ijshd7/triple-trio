@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #000000; 
+    background-color: #000000;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -11,13 +11,126 @@ body {
     height: 100vh;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.spritePosition {
-    margin: 10px 0 0 10px;
-    font-size: 0.8em;
+.game-wrapper {
+    position: relative;
+}
+
+.game-ui-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1024px;
+    height: 768px;
+    pointer-events: none;
+}
+
+.game-ui-overlay .player-hand {
+    pointer-events: auto;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-hand-label {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.player-hand-cards {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.player-hand-card {
+    width: 100px;
+    height: 140px;
+    background: #1e293b;
+    border: 3px solid;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.player-hand-card:hover {
+    transform: scale(1.05);
+}
+
+.player-hand-card.selected {
+    transform: scale(1.08);
+}
+
+.player-hand-card-name {
+    font-size: 10px;
+    color: #d1d5db;
+    margin-bottom: 8px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.player-hand-card-values {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.player-hand-card-values .value-top {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.menu-buttons {
+    margin-top: 16px;
 }
 
 .button {
@@ -29,20 +142,19 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.87);
     cursor: pointer;
     transition: all 0.3s;
+}
 
-    &:hover {
-        border: 1px solid #0ec3c9;
-        color: #0ec3c9;
-    }
+.button:hover {
+    border: 1px solid #0ec3c9;
+    color: #0ec3c9;
+}
 
-    &:active {
-        background-color: #0ec3c9;
-    }
+.button:active {
+    background-color: #0ec3c9;
+}
 
-    /* Disabled styles */
-    &:disabled {
-        cursor: not-allowed;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: rgba(255, 255, 255, 0.3);
-    }
+.button:disabled {
+    cursor: not-allowed;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.3);
 }

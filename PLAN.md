@@ -320,13 +320,13 @@ Assets must follow this naming convention and folder structure:
 ### Phase 2 — Board Rendering & Interaction
 **Goal:** Playable game on screen with basic visuals.
 
-- [ ] Create placeholder assets (colored rectangles for frames, grid lines)
-- [ ] Implement `CardSprite.ts` (Container with frame + value text)
-- [ ] Implement `BoardGrid.ts` (render grid, handle cell clicks)
-- [ ] Replace `Game.ts` scene with board rendering + engine wiring
-- [ ] Implement `PlayerHand.tsx` (React, clickable cards)
-- [ ] Wire hand selection → EventBus → Phaser board placement
-- [ ] Basic turn flow: select card → click cell → card appears
+- [x] Create placeholder assets (colored rectangles for frames, grid lines)
+- [x] Implement `CardSprite.ts` (Container with frame + value text)
+- [x] Implement `BoardGrid.ts` (render grid, handle cell clicks)
+- [x] Replace `Game.ts` scene with board rendering + engine wiring
+- [x] Implement `PlayerHand.tsx` (React, clickable cards)
+- [x] Wire hand selection → EventBus → Phaser board placement
+- [x] Basic turn flow: select card → click cell → card appears
 
 **Deliverable:** Playable hotseat game with basic capture, no animations.
 **Complexity:** Medium-High

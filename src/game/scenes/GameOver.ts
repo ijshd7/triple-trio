@@ -1,36 +1,57 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import { PlayerSide } from '../../data/types';
 
-export class GameOver extends Scene
-{
-    camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
-    gameOverText : Phaser.GameObjects.Text;
+export class GameOver extends Scene {
+  private gameOverData: { winner?: PlayerSide | 'draw'; blueScore?: number; redScore?: number } = {};
 
-    constructor ()
-    {
-        super('GameOver');
-    }
+  constructor() {
+    super('GameOver');
+  }
 
-    create ()
-    {
-        this.camera = this.cameras.main
-        this.camera.setBackgroundColor(0xff0000);
+  init(data: { winner?: PlayerSide | 'draw'; blueScore?: number; redScore?: number }) {
+    this.gameOverData = data;
+  }
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
+  create() {
+    const { winner = 'draw', blueScore = 0, redScore = 0 } = this.gameOverData;
 
-        this.gameOverText = this.add.text(512, 384, 'Game Over', {
-            fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setOrigin(0.5).setDepth(100);
-        
-        EventBus.emit('current-scene-ready', this);
-    }
+    this.cameras.main.setBackgroundColor(0x0f172a);
 
-    changeScene ()
-    {
-        this.scene.start('MainMenu');
-    }
+    const winnerText =
+      winner === 'draw'
+        ? 'Draw!'
+        : winner === PlayerSide.Blue
+          ? 'Blue Wins!'
+          : 'Red Wins!';
+
+    this.add
+      .text(512, 320, winnerText, {
+        fontFamily: 'Arial Black',
+        fontSize: 48,
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center',
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(512, 400, `Final Score: ${blueScore} - ${redScore}`, {
+        fontSize: '24px',
+        color: '#94a3b8',
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(512, 500, 'Click to return to menu', {
+        fontSize: '16px',
+        color: '#64748b',
+      })
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => this.scene.start('MainMenu'));
+
+    EventBus.emit('current-scene-ready', this);
+  }
 }
