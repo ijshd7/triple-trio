@@ -305,14 +305,14 @@ Assets must follow this naming convention and folder structure:
 ### Phase 1 — Core Engine
 **Goal:** Game engine runs a complete game in the console.
 
-- [ ] Create `src/data/types.ts` with all interfaces/enums
-- [ ] Create `src/data/cards.ts` with 10-20 starter cards
-- [ ] Implement `src/engine/Board.ts` (create, adjacency, place)
-- [ ] Implement `src/engine/GameState.ts` (init, clone, scoring)
-- [ ] Implement `src/engine/rules/BasicRule.ts`
-- [ ] Implement `src/engine/RuleEngine.ts` (Basic only)
-- [ ] Implement `src/engine/GameEngine.ts` (turn loop, validation)
-- [ ] Console-based test: run full game with hardcoded moves
+- [x] Create `src/data/types.ts` with all interfaces/enums
+- [x] Create `src/data/cards.ts` with 10-20 starter cards
+- [x] Implement `src/engine/Board.ts` (create, adjacency, place)
+- [x] Implement `src/engine/GameState.ts` (init, clone, scoring)
+- [x] Implement `src/engine/rules/BasicRule.ts`
+- [x] Implement `src/engine/RuleEngine.ts` (Basic only)
+- [x] Implement `src/engine/GameEngine.ts` (turn loop, validation)
+- [x] Console-based test: run full game with hardcoded moves
 
 **Deliverable:** `GameEngine` that processes `placeCard()` calls and returns correct `MoveResult` events.
 **Complexity:** Medium
