@@ -23,8 +23,12 @@ function getPositionBonus(row: number, col: number): number {
 /**
  * Sum of card values (1-10 each, max 40 per card).
  */
-function cardStrength(card: { values: { top: number; right: number; bottom: number; left: number } }): number {
-  return card.values.top + card.values.right + card.values.bottom + card.values.left;
+function cardStrength(card: {
+  values: { top: number; right: number; bottom: number; left: number };
+}): number {
+  return (
+    card.values.top + card.values.right + card.values.bottom + card.values.left
+  );
 }
 
 /**
@@ -32,10 +36,14 @@ function cardStrength(card: { values: { top: number; right: number; bottom: numb
  * Higher = better for AI.
  */
 export function evaluateBoard(state: GameState, aiSide: PlayerSide): number {
-  const opponentSide = aiSide === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+  const opponentSide =
+    aiSide === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
 
   const aiCardsOnBoard = countCardsOwnedOnBoard(state.board, aiSide);
-  const opponentCardsOnBoard = countCardsOwnedOnBoard(state.board, opponentSide);
+  const opponentCardsOnBoard = countCardsOwnedOnBoard(
+    state.board,
+    opponentSide
+  );
   const cardDiff = aiCardsOnBoard - opponentCardsOnBoard;
 
   let positionBonus = 0;
@@ -51,8 +59,14 @@ export function evaluateBoard(state: GameState, aiSide: PlayerSide): number {
 
   const aiPlayer = getPlayer(state, aiSide);
   const oppPlayer = getPlayer(state, opponentSide);
-  const aiHandStrength = aiPlayer.hand.reduce((sum, c) => sum + cardStrength(c), 0);
-  const oppHandStrength = oppPlayer.hand.reduce((sum, c) => sum + cardStrength(c), 0);
+  const aiHandStrength = aiPlayer.hand.reduce(
+    (sum, c) => sum + cardStrength(c),
+    0
+  );
+  const oppHandStrength = oppPlayer.hand.reduce(
+    (sum, c) => sum + cardStrength(c),
+    0
+  );
   const handDiff = (aiHandStrength - oppHandStrength) / 40;
 
   return cardDiff * 10 + positionBonus * 3 + handDiff * 2;

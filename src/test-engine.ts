@@ -38,7 +38,9 @@ function printBoard(state: GameState): void {
 function printScores(state: GameState): void {
   const blue = state.players[0];
   const red = state.players[1];
-  console.log(`  Blue score: ${blue.score} (${blue.hand.length} cards in hand)`);
+  console.log(
+    `  Blue score: ${blue.score} (${blue.hand.length} cards in hand)`
+  );
   console.log(`  Red score:  ${red.score} (${red.hand.length} cards in hand)`);
 }
 
@@ -54,13 +56,17 @@ function printEvents(events: GameEvent[]): void {
         );
         break;
       case 'card-captured':
-        console.log(`  → Card captured at (${event.row},${event.col}) by ${event.byRule} rule`);
+        console.log(
+          `  → Card captured at (${event.row},${event.col}) by ${event.byRule} rule`
+        );
         break;
       case 'turn-changed':
         console.log(`  → Turn changed to ${event.newTurn}`);
         break;
       case 'game-over':
-        console.log(`  → Game Over! Winner: ${event.winner} (Blue: ${event.blueScore}, Red: ${event.redScore})`);
+        console.log(
+          `  → Game Over! Winner: ${event.winner} (Blue: ${event.blueScore}, Red: ${event.redScore})`
+        );
         break;
       default:
         break;
@@ -72,13 +78,13 @@ function printEvents(events: GameEvent[]): void {
 // GAME SETUP
 // ──────────────────────────────────────────────────────────────
 
-const blueHand = CARDS.slice(0, 5);  // Cards 1-5
-const redHand = CARDS.slice(5, 10);  // Cards 6-10
+const blueHand = CARDS.slice(0, 5); // Cards 1-5
+const redHand = CARDS.slice(5, 10); // Cards 6-10
 
 const engine = new GameEngine({
   blueHand,
   redHand,
-  activeRules: [],  // Only BasicRule is active (always included)
+  activeRules: [], // Only BasicRule is active (always included)
   blueIsAI: false,
   redIsAI: false,
 });
@@ -129,7 +135,8 @@ for (let i = 0; i < moves.length; i++) {
   console.log(`Turn ${state.turnNumber} (${state.currentTurn})`);
   console.log(`${'═'.repeat(50)}`);
 
-  const currentPlayer = state.players[state.currentTurn === PlayerSide.Blue ? 0 : 1];
+  const currentPlayer =
+    state.players[state.currentTurn === PlayerSide.Blue ? 0 : 1];
   const cardName = currentPlayer.hand[handIndex].name;
 
   console.log(`Placing hand[${handIndex}] ${cardName} at (${row},${col})`);

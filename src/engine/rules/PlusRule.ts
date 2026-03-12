@@ -1,4 +1,10 @@
-import { Board, CardDef, Direction, PlayerSide, RuleType } from '../../data/types';
+import {
+  Board,
+  CardDef,
+  Direction,
+  PlayerSide,
+  RuleType,
+} from '../../data/types';
 import { getAdjacentCells, getCardValue, OPPOSITE_DIRECTION } from '../Board';
 import { getElementalModifier } from '../../data/elements';
 import { CaptureResult, CaptureRule } from './BasicRule';
@@ -76,7 +82,9 @@ export class PlusRule implements CaptureRule {
         sumCounts.set(sum, (sumCounts.get(sum) ?? 0) + 1);
       }
 
-      const targetSum = [...sumCounts.entries()].find(([, count]) => count >= 2)?.[0];
+      const targetSum = [...sumCounts.entries()].find(
+        ([, count]) => count >= 2
+      )?.[0];
       if (targetSum !== undefined) {
         for (const { row, col, sum } of pairsWithSums) {
           if (sum === targetSum) {

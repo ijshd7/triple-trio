@@ -1,4 +1,10 @@
-import { Board, CardDef, Direction, PlayerSide, RuleType } from '../../data/types';
+import {
+  Board,
+  CardDef,
+  Direction,
+  PlayerSide,
+  RuleType,
+} from '../../data/types';
 import { getAdjacentCells, getCardValue, OPPOSITE_DIRECTION } from '../Board';
 import { getElementalModifier } from '../../data/elements';
 

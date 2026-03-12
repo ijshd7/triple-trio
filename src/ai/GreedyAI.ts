@@ -20,12 +20,15 @@ function getPositionBonus(row: number, col: number): number {
   return CENTER_BONUS;
 }
 
-function cardStrength(card: { values: { top: number; right: number; bottom: number; left: number } }): number {
-  return card.values.top + card.values.right + card.values.bottom + card.values.left;
+function cardStrength(card: {
+  values: { top: number; right: number; bottom: number; left: number };
+}): number {
+  return (
+    card.values.top + card.values.right + card.values.bottom + card.values.left
+  );
 }
 
 export class GreedyAI implements AIPlayer {
-
   chooseMove(engine: GameEngine): AIMove {
     const moves = engine.getValidMoves();
     if (moves.length === 0) throw new Error('No valid moves');
@@ -37,15 +40,23 @@ export class GreedyAI implements AIPlayer {
       const cloned = engine.clone();
       const result = cloned.placeCard(move.handIndex, move.row, move.col);
 
-      const captures = result.events.filter((e) => e.type === 'card-captured').length;
+      const captures = result.events.filter(
+        (e) => e.type === 'card-captured'
+      ).length;
       const posBonus = getPositionBonus(move.row, move.col);
       const score = captures * 10 + posBonus;
 
       const state = engine.getState();
-      const currentPlayer = state.players[state.currentTurn === PlayerSide.Blue ? 0 : 1];
+      const currentPlayer =
+        state.players[state.currentTurn === PlayerSide.Blue ? 0 : 1];
       const cardStrengthVal = cardStrength(currentPlayer.hand[move.handIndex]);
 
-      if (score > bestScore || (score === bestScore && cardStrengthVal < cardStrength(currentPlayer.hand[bestMove.handIndex]))) {
+      if (
+        score > bestScore ||
+        (score === bestScore &&
+          cardStrengthVal <
+            cardStrength(currentPlayer.hand[bestMove.handIndex]))
+      ) {
         bestScore = score;
         bestMove = move;
       }

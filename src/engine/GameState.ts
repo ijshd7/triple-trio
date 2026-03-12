@@ -1,5 +1,17 @@
-import { GamePhase, GameState, Player, PlayerSide, RuleType, CardDef } from '../data/types';
-import { createBoard, cloneBoard, countCardsOwnedOnBoard, DEFAULT_ELEMENT_LAYOUT } from './Board';
+import {
+  GamePhase,
+  GameState,
+  Player,
+  PlayerSide,
+  RuleType,
+  CardDef,
+} from '../data/types';
+import {
+  createBoard,
+  cloneBoard,
+  countCardsOwnedOnBoard,
+  DEFAULT_ELEMENT_LAYOUT,
+} from './Board';
 
 /* ──────────────────────────────────────────────────────────────
    Game State Management for Triple Trio
@@ -97,9 +109,11 @@ export function getOpponent(state: GameState, side: PlayerSide): Player {
 export function recalculateScores(state: GameState): GameState {
   const newState = cloneState(state);
   newState.players[0].score =
-    countCardsOwnedOnBoard(state.board, PlayerSide.Blue) + state.players[0].hand.length;
+    countCardsOwnedOnBoard(state.board, PlayerSide.Blue) +
+    state.players[0].hand.length;
   newState.players[1].score =
-    countCardsOwnedOnBoard(state.board, PlayerSide.Red) + state.players[1].hand.length;
+    countCardsOwnedOnBoard(state.board, PlayerSide.Red) +
+    state.players[1].hand.length;
   return newState;
 }
 
@@ -124,7 +138,8 @@ export function removeCardFromHand(
  */
 export function advanceTurn(state: GameState): GameState {
   const newState = cloneState(state);
-  newState.currentTurn = state.currentTurn === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+  newState.currentTurn =
+    state.currentTurn === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
   newState.turnNumber = state.turnNumber + 1;
   return newState;
 }

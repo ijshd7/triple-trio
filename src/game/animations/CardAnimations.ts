@@ -12,7 +12,10 @@ const CAPTURE_GLOW_DURATION = 200;
 const COMBO_STAGGER = 200;
 
 /** Hand position for placement animation (bottom center, card area) */
-export function getHandPosition(handIndex: number, handSize: number): { x: number; y: number } {
+export function getHandPosition(
+  handIndex: number,
+  handSize: number
+): { x: number; y: number } {
   const cardWidth = CardSprite.width;
   const spacing = 12;
   const totalWidth = handSize * cardWidth + (handSize - 1) * spacing;

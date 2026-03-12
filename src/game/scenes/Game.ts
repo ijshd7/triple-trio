@@ -39,22 +39,34 @@ export class Game extends Scene {
   private selectedHandIndex: number | null = null;
   private isAnimating = false;
   private redAI: AIPlayer | null = null;
+  private readonly boundOnCardSelected = (idx: number) =>
+    this.onCardSelected(idx);
 
   constructor() {
     super('Game');
   }
 
-  init(data: { blueHand?: CardDef[]; redHand?: CardDef[]; difficulty?: AIDifficulty }) {
+  init(data: {
+    blueHand?: CardDef[];
+    redHand?: CardDef[];
+    difficulty?: AIDifficulty;
+  }) {
     const blueHand = data.blueHand ?? CARDS.slice(0, 5);
     const redHand = data.redHand ?? CARDS.slice(5, 10);
     const difficulty = data.difficulty ?? 'easy';
 
-    this.redAI = difficulty === 'hard' ? new MinimaxAI(PlayerSide.Red) : new GreedyAI();
+    this.redAI =
+      difficulty === 'hard' ? new MinimaxAI(PlayerSide.Red) : new GreedyAI();
 
     this.engine = new GameEngine({
       blueHand,
       redHand,
-      activeRules: [RuleType.Basic, RuleType.Same, RuleType.Plus, RuleType.Elemental],
+      activeRules: [
+        RuleType.Basic,
+        RuleType.Same,
+        RuleType.Plus,
+        RuleType.Elemental,
+      ],
       blueIsAI: false,
       redIsAI: true,
     });
@@ -67,7 +79,9 @@ export class Game extends Scene {
 
     const state = this.engine.getState();
 
-    this.boardGrid = new BoardGrid(this, (row, col) => this.onCellClick(row, col));
+    this.boardGrid = new BoardGrid(this, (row, col) => {
+      void this.onCellClick(row, col);
+    });
     this.add.existing(this.boardGrid);
 
     this.boardGrid.syncBoard(state.board);
@@ -95,7 +109,7 @@ export class Game extends Scene {
       .setOrigin(0.5)
       .setName('turn-display');
 
-    EventBus.on('card-selected', this.onCardSelected, this);
+    EventBus.on('card-selected', this.boundOnCardSelected, this);
     EventBus.emit('game-state-changed', state);
     EventBus.emit('current-scene-ready', this);
   }
@@ -113,15 +127,18 @@ export class Game extends Scene {
   }
 
   private async onCellClick(row: number, col: number) {
-    if (!this.engine || this.selectedHandIndex === null || this.isAnimating) return;
+    if (!this.engine || this.selectedHandIndex === null || this.isAnimating)
+      return;
 
     if (!this.engine.isValidMove(this.selectedHandIndex, row, col)) {
       return;
     }
 
     const handIndex = this.selectedHandIndex;
-    const handSize = getPlayer(this.engine.getState(), this.engine.getState().currentTurn).hand
-      .length;
+    const handSize = getPlayer(
+      this.engine.getState(),
+      this.engine.getState().currentTurn
+    ).hand.length;
     this.selectedHandIndex = null;
     EventBus.emit('card-selection-changed', null);
     this.isAnimating = true;
@@ -137,19 +154,31 @@ export class Game extends Scene {
     const placedCard = this.boardGrid?.getCardSprite(row, col);
     if (placedCard) {
       playSfx(this, SFX_KEYS.CARD_PLACE);
-      await animatePlace(this, placedCard, handPos.x, handPos.y, cellCenter.x, cellCenter.y);
+      await animatePlace(
+        this,
+        placedCard,
+        handPos.x,
+        handPos.y,
+        cellCenter.x,
+        cellCenter.y
+      );
     }
 
     const captureEvents = events.filter(
-      (e): e is GameEvent & { type: 'card-captured' } => e.type === 'card-captured'
+      (e): e is GameEvent & { type: 'card-captured' } =>
+        e.type === 'card-captured'
     );
 
     if (captureEvents.length > 1) {
-      const cards: Array<{ sprite: import('../objects/CardSprite').CardSprite; newOwner: PlayerSide }> = [];
+      const cards: Array<{
+        sprite: import('../objects/CardSprite').CardSprite;
+        newOwner: PlayerSide;
+      }> = [];
       for (const ev of captureEvents) {
         const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
         if (card) {
-          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          const oldOwner =
+            ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
           card.setOwner(oldOwner);
           cards.push({ sprite: card, newOwner: ev.newOwner });
         }
@@ -162,7 +191,8 @@ export class Game extends Scene {
       for (const ev of captureEvents) {
         const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
         if (card) {
-          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          const oldOwner =
+            ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
           card.setOwner(oldOwner);
           playSfx(this, SFX_KEYS.CARD_FLIP);
           await animateFlip(this, card, ev.newOwner);
@@ -176,7 +206,14 @@ export class Game extends Scene {
 
     if (newState.phase === GamePhase.GameOver) {
       const playerWon = newState.winner === PlayerSide.Blue;
-      playSfx(this, newState.winner === 'draw' ? SFX_KEYS.DEFEAT : playerWon ? SFX_KEYS.VICTORY : SFX_KEYS.DEFEAT);
+      playSfx(
+        this,
+        newState.winner === 'draw'
+          ? SFX_KEYS.DEFEAT
+          : playerWon
+            ? SFX_KEYS.VICTORY
+            : SFX_KEYS.DEFEAT
+      );
       this.scene.start('GameOver', {
         winner: newState.winner,
         blueScore: newState.players[0].score,
@@ -194,7 +231,11 @@ export class Game extends Scene {
     if (!this.engine || this.isAnimating || !this.redAI) return;
 
     const state = this.engine.getState();
-    if (state.phase !== GamePhase.Playing || state.currentTurn !== PlayerSide.Red) return;
+    if (
+      state.phase !== GamePhase.Playing ||
+      state.currentTurn !== PlayerSide.Red
+    )
+      return;
 
     this.isAnimating = true;
 
@@ -212,19 +253,31 @@ export class Game extends Scene {
     const placedCard = this.boardGrid?.getCardSprite(move.row, move.col);
     if (placedCard) {
       playSfx(this, SFX_KEYS.CARD_PLACE);
-      await animatePlace(this, placedCard, handPos.x, handPos.y, cellCenter.x, cellCenter.y);
+      await animatePlace(
+        this,
+        placedCard,
+        handPos.x,
+        handPos.y,
+        cellCenter.x,
+        cellCenter.y
+      );
     }
 
     const captureEvents = events.filter(
-      (e): e is GameEvent & { type: 'card-captured' } => e.type === 'card-captured'
+      (e): e is GameEvent & { type: 'card-captured' } =>
+        e.type === 'card-captured'
     );
 
     if (captureEvents.length > 1) {
-      const cards: Array<{ sprite: import('../objects/CardSprite').CardSprite; newOwner: PlayerSide }> = [];
+      const cards: Array<{
+        sprite: import('../objects/CardSprite').CardSprite;
+        newOwner: PlayerSide;
+      }> = [];
       for (const ev of captureEvents) {
         const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
         if (card) {
-          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          const oldOwner =
+            ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
           card.setOwner(oldOwner);
           cards.push({ sprite: card, newOwner: ev.newOwner });
         }
@@ -237,7 +290,8 @@ export class Game extends Scene {
       for (const ev of captureEvents) {
         const card = this.boardGrid?.getCardSprite(ev.row, ev.col);
         if (card) {
-          const oldOwner = ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
+          const oldOwner =
+            ev.newOwner === PlayerSide.Blue ? PlayerSide.Red : PlayerSide.Blue;
           card.setOwner(oldOwner);
           playSfx(this, SFX_KEYS.CARD_FLIP);
           await animateFlip(this, card, ev.newOwner);
@@ -251,7 +305,14 @@ export class Game extends Scene {
 
     if (newState.phase === GamePhase.GameOver) {
       const playerWon = newState.winner === PlayerSide.Blue;
-      playSfx(this, newState.winner === 'draw' ? SFX_KEYS.DEFEAT : playerWon ? SFX_KEYS.VICTORY : SFX_KEYS.DEFEAT);
+      playSfx(
+        this,
+        newState.winner === 'draw'
+          ? SFX_KEYS.DEFEAT
+          : playerWon
+            ? SFX_KEYS.VICTORY
+            : SFX_KEYS.DEFEAT
+      );
       this.scene.start('GameOver', {
         winner: newState.winner,
         blueScore: newState.players[0].score,
@@ -265,12 +326,18 @@ export class Game extends Scene {
   private syncFromState(state: GameState) {
     this.boardGrid?.syncBoard(state.board);
 
-    const scoreDisplay = this.children.getByName('score-display') as Phaser.GameObjects.Text;
+    const scoreDisplay = this.children.getByName(
+      'score-display'
+    ) as Phaser.GameObjects.Text;
     if (scoreDisplay) {
-      scoreDisplay.setText(`${state.players[0].score} - ${state.players[1].score}`);
+      scoreDisplay.setText(
+        `${state.players[0].score} - ${state.players[1].score}`
+      );
     }
 
-    const turnDisplay = this.children.getByName('turn-display') as Phaser.GameObjects.Text;
+    const turnDisplay = this.children.getByName(
+      'turn-display'
+    ) as Phaser.GameObjects.Text;
     if (turnDisplay) {
       turnDisplay.setText(`Turn: ${state.currentTurn}`);
     }
@@ -279,6 +346,6 @@ export class Game extends Scene {
   }
 
   shutdown() {
-    EventBus.off('card-selected', this.onCardSelected, this);
+    EventBus.off('card-selected', this.boundOnCardSelected, this);
   }
 }

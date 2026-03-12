@@ -1,4 +1,12 @@
-import { Board, BoardCell, CardDef, CardInstance, Direction, Element, PlayerSide } from '../data/types';
+import {
+  Board,
+  BoardCell,
+  CardDef,
+  CardInstance,
+  Direction,
+  Element,
+  PlayerSide,
+} from '../data/types';
 
 /* ──────────────────────────────────────────────────────────────
    Board Utilities for Triple Trio
@@ -8,8 +16,8 @@ import { Board, BoardCell, CardDef, CardInstance, Direction, Element, PlayerSide
 // Direction deltas: [rowDelta, colDelta] indexed by Direction enum value
 const DIRECTION_DELTAS: [number, number][] = [
   [-1, 0], // Direction.Top    = 0
-  [0, 1],  // Direction.Right  = 1
-  [1, 0],  // Direction.Bottom = 2
+  [0, 1], // Direction.Right  = 1
+  [1, 0], // Direction.Bottom = 2
   [0, -1], // Direction.Left   = 3
 ];
 
@@ -43,8 +51,7 @@ export function createBoard(elementLayout?: Element[][]): Board {
   for (let row = 0; row < 3; row++) {
     board[row] = [];
     for (let col = 0; col < 3; col++) {
-      const element =
-        elementLayout?.[row]?.[col] ?? Element.None;
+      const element = elementLayout?.[row]?.[col] ?? Element.None;
       board[row][col] = {
         row,
         col,
@@ -146,7 +153,7 @@ export function getCardValue(card: CardDef, direction: Direction): number {
     case Direction.Left:
       return card.values.left;
     default:
-      throw new Error(`Invalid direction: ${direction}`);
+      throw new Error(`Invalid direction: ${String(direction)}`);
   }
 }
 

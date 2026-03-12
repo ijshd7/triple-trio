@@ -66,7 +66,9 @@ export function PlayerHand({ gameState }: PlayerHandProps) {
   if (gameState.currentTurn !== PlayerSide.Blue) {
     return (
       <div className="player-hand">
-        <div className="player-hand-label">Red&apos;s turn (AI thinking...)</div>
+        <div className="player-hand-label">
+          Red&apos;s turn (AI thinking...)
+        </div>
       </div>
     );
   }
@@ -77,7 +79,10 @@ export function PlayerHand({ gameState }: PlayerHandProps) {
   return (
     <div className="player-hand">
       <div className="player-hand-label">
-        {gameState.currentTurn === PlayerSide.Blue ? "Blue's turn" : "Red's turn"} — Select a card
+        {gameState.currentTurn === PlayerSide.Blue
+          ? "Blue's turn"
+          : "Red's turn"}{' '}
+        — Select a card
       </div>
       <div className="player-hand-cards">
         {hand.map((card, index) => (

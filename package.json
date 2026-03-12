@@ -27,7 +27,12 @@
         "build-nolog": "vite build --config vite/config.prod.mjs",
         "prelint": "npm install",
         "lint": "eslint src",
-        "lint:fix": "eslint src --fix"
+        "lint:fix": "eslint src --fix",
+        "format": "prettier --write \"src/**/*.{ts,tsx,json}\"",
+        "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\"",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "dependencies": {
         "phaser": "^3.90.0",
@@ -47,6 +52,9 @@
         "tsx": "^4.21.0",
         "typescript": "~5.7.2",
         "typescript-eslint": "^8.26.1",
-        "vite": "^6.3.1"
+        "vite": "^6.3.1",
+        "vitest": "^2.1.0",
+        "prettier": "^3.4.0",
+        "eslint-config-prettier": "^9.1.0"
     }
 }

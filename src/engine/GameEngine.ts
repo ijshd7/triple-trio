@@ -140,13 +140,23 @@ export class GameEngine {
     // ──────────────────────────────────────────────────────────────
     // 6. REMOVE CARD FROM HAND
     // ──────────────────────────────────────────────────────────────
-    let newState = removeCardFromHand(this.state, this.state.currentTurn, handIndex);
+    let newState = removeCardFromHand(
+      this.state,
+      this.state.currentTurn,
+      handIndex
+    );
     newState.board = newBoard;
 
     // ──────────────────────────────────────────────────────────────
     // 7. EVALUATE CAPTURES
     // ──────────────────────────────────────────────────────────────
-    const captures = this.ruleEngine.evaluate(newBoard, row, col, placedCard, this.state.currentTurn);
+    const captures = this.ruleEngine.evaluate(
+      newBoard,
+      row,
+      col,
+      placedCard,
+      this.state.currentTurn
+    );
 
     // ──────────────────────────────────────────────────────────────
     // 8. APPLY CAPTURES + EMIT CAPTURE EVENTS
@@ -236,7 +246,11 @@ export class GameEngine {
     const currentPlayer = getPlayer(this.state, this.state.currentTurn);
     const moves: AIMove[] = [];
 
-    for (let handIndex = 0; handIndex < currentPlayer.hand.length; handIndex++) {
+    for (
+      let handIndex = 0;
+      handIndex < currentPlayer.hand.length;
+      handIndex++
+    ) {
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
           if (this.isValidMove(handIndex, row, col)) {

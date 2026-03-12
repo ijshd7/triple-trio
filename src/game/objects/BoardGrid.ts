@@ -44,7 +44,14 @@ export class BoardGrid extends GameObjects.Container {
         const x = BOARD_OFFSET_X + col * CELL_SIZE + CELL_SIZE / 2;
         const y = BOARD_OFFSET_Y + row * CELL_SIZE + CELL_SIZE / 2;
 
-        const cellBg = this.scene.add.rectangle(x, y, CELL_SIZE - 4, CELL_SIZE - 4, 0x1e3a5f, 1);
+        const cellBg = this.scene.add.rectangle(
+          x,
+          y,
+          CELL_SIZE - 4,
+          CELL_SIZE - 4,
+          0x1e3a5f,
+          1
+        );
         cellBg.setStrokeStyle(2, 0x3b82f6);
         cellBg.setInteractive({ useHandCursor: true });
 
@@ -82,7 +89,8 @@ export class BoardGrid extends GameObjects.Container {
 
         const cellRect = this.cells[row]?.[col];
         if (cellRect) {
-          const color = ELEMENT_COLORS[cell.element] ?? ELEMENT_COLORS[Element.None];
+          const color =
+            ELEMENT_COLORS[cell.element] ?? ELEMENT_COLORS[Element.None];
           cellRect.setFillStyle(color);
         }
 

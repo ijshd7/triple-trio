@@ -32,9 +32,7 @@ export function GameUI({ visible }: GameUIProps) {
 
   return (
     <div className="game-ui-overlay">
-      {gameState && (
-        <RuleDisplay activeRules={gameState.activeRules} />
-      )}
+      {gameState && <RuleDisplay activeRules={gameState.activeRules} />}
       <PlayerHand gameState={gameState} />
     </div>
   );

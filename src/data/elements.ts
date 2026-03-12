@@ -24,7 +24,10 @@ export const ELEMENT_NAMES: Record<Element, string> = {
  * - Elemental cell with non-matching card: -1 to all values
  * - Cell with Element.None: no modifier (0)
  */
-export function getElementalModifier(cellElement: Element, cardElement: Element): number {
+export function getElementalModifier(
+  cellElement: Element,
+  cardElement: Element
+): number {
   if (cellElement === Element.None) {
     return 0;
   }

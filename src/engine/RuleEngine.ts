@@ -21,7 +21,8 @@ export class RuleEngine {
     this.rules = this.buildRules(activeRules);
     this.basicRule = new BasicRule(activeRules);
     this.hasSameOrPlus =
-      activeRules.includes(RuleType.Same) || activeRules.includes(RuleType.Plus);
+      activeRules.includes(RuleType.Same) ||
+      activeRules.includes(RuleType.Plus);
   }
 
   /**
@@ -75,7 +76,8 @@ export class RuleEngine {
           capturesByCell.set(key, capture);
           if (
             this.hasSameOrPlus &&
-            (capture.byRule === RuleType.Same || capture.byRule === RuleType.Plus)
+            (capture.byRule === RuleType.Same ||
+              capture.byRule === RuleType.Plus)
           ) {
             sameOrPlusCaptures.push(capture);
           }

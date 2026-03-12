@@ -3,13 +3,21 @@ import { Scene } from 'phaser';
 import { PlayerSide } from '../../data/types';
 
 export class GameOver extends Scene {
-  private gameOverData: { winner?: PlayerSide | 'draw'; blueScore?: number; redScore?: number } = {};
+  private gameOverData: {
+    winner?: PlayerSide | 'draw';
+    blueScore?: number;
+    redScore?: number;
+  } = {};
 
   constructor() {
     super('GameOver');
   }
 
-  init(data: { winner?: PlayerSide | 'draw'; blueScore?: number; redScore?: number }) {
+  init(data: {
+    winner?: PlayerSide | 'draw';
+    blueScore?: number;
+    redScore?: number;
+  }) {
     this.gameOverData = data;
   }
 
