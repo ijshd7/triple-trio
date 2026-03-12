@@ -374,15 +374,15 @@ Assets must follow this naming convention and folder structure:
 ### Phase 6 — Asset Import & Polish
 **Goal:** Complete, polished MVP with custom art and UI.
 
-- [ ] Generate assets in external asset generator app (separate from this repo)
-- [ ] Import card artworks (50+) to `public/assets/cards/` following naming convention
+- [x] Generate assets in external asset generator app (separate from this repo)
+- [x] Import card artworks to `public/cards/` following naming convention
 - [ ] Import card frames, board, and cell textures to `public/assets/ui/`
 - [ ] Import SFX and music to `public/assets/sfx/` and `public/assets/music/`
-- [ ] Populate full `src/data/cards.ts` database with stats and `artworkKey` references
-- [ ] Implement `DeckSelect.ts` scene + `DeckSelectUI.tsx`
-- [ ] Replace `MainMenu.ts` with title screen
-- [ ] Improve `GameOver.ts` with score breakdown
-- [ ] Implement `ScoreDisplay.tsx`, `TurnIndicator.tsx`
+- [x] Populate full `src/data/cards.ts` database with stats and `artworkKey` references
+- [x] Implement `DeckSelect.ts` scene + `DeckSelectUI.tsx`
+- [x] Replace `MainMenu.ts` with title screen
+- [x] Improve `GameOver.ts` with score breakdown
+- [x] Implement `ScoreDisplay.tsx`, `TurnIndicator.tsx`
 - [ ] Add background music, screen transitions, card tooltips
 
 **Deliverable:** Complete MVP ready for demo.

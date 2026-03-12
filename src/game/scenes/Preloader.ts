@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { SFX_KEYS } from '../SoundManager';
+import { CARDS } from '../../data/cards';
 
 export class Preloader extends Scene {
   constructor() {
@@ -17,8 +18,13 @@ export class Preloader extends Scene {
   }
 
   preload() {
-    this.load.setPath('assets');
+    // Load card artwork from public/cards/
+    this.load.setPath('cards');
+    for (const card of CARDS) {
+      this.load.image(card.artworkKey, `${card.artworkKey}.png`);
+    }
 
+    this.load.setPath('assets');
     this.load.image('logo', 'logo.png');
     this.load.image('star', 'star.png');
 

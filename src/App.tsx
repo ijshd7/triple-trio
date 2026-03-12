@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { IRefPhaserGame, PhaserGame } from './PhaserGame';
 import { MainMenu } from './game/scenes/MainMenu';
 import { GameUI } from './ui/GameUI';
+import { DeckSelectUI } from './ui/DeckSelectUI';
 
 type AIDifficulty = 'easy' | 'hard';
 
@@ -24,12 +25,14 @@ function App() {
   };
 
   const isGameScene = currentSceneKey === 'Game';
+  const isDeckSelectScene = currentSceneKey === 'DeckSelect';
 
   return (
     <div id="app">
       <div className="game-wrapper">
         <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
         <GameUI visible={isGameScene} />
+        {isDeckSelectScene && <DeckSelectUI />}
       </div>
       {currentSceneKey === 'MainMenu' && (
         <div className="menu-buttons">

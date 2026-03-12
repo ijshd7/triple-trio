@@ -29,6 +29,35 @@ body {
     pointer-events: none;
 }
 
+.score-display {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #94a3b8;
+}
+
+.score-blue { color: #3b82f6; }
+.score-red { color: #dc2626; }
+.score-separator { margin: 0 8px; color: #64748b; }
+
+.turn-indicator {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.turn-label {
+    padding: 4px 12px;
+    background: #1e293b;
+    border-radius: 4px;
+    border: 1px solid #334155;
+}
+
 .rule-display {
     pointer-events: auto;
     position: absolute;
@@ -226,4 +255,108 @@ body {
     cursor: not-allowed;
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.3);
+}
+
+/* Deck Select */
+.deck-select-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1024px;
+    height: 768px;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 140px;
+}
+
+.deck-select-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 900px;
+}
+
+.deck-select-card {
+    width: 100px;
+    height: 130px;
+    background: #1e293b;
+    border: 3px solid #475569;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.deck-select-card:hover:not(:disabled) {
+    border-color: #64748b;
+    transform: scale(1.03);
+}
+
+.deck-select-card.selected {
+    border-color: #2563eb;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+}
+
+.deck-select-card:disabled:not(.selected) {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.deck-select-card-name {
+    font-size: 11px;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.deck-select-card-rarity {
+    font-size: 9px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.deck-select-card-values {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.deck-select-card-values .value-top,
+.deck-select-card-values .value-right,
+.deck-select-card-values .value-bottom,
+.deck-select-card-values .value-left {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    color: #94a3b8;
+}
+
+.deck-select-card-values .value-top { top: 0; left: 50%; transform: translateX(-50%); }
+.deck-select-card-values .value-right { right: 0; top: 50%; transform: translateY(-50%); }
+.deck-select-card-values .value-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.deck-select-card-values .value-left { left: 0; top: 50%; transform: translateY(-50%); }
+
+.deck-select-footer {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.deck-select-count {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.deck-select-confirm {
+    width: 160px;
 }

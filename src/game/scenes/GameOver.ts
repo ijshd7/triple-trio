@@ -45,14 +45,29 @@ export class GameOver extends Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(512, 400, `Final Score: ${blueScore} - ${redScore}`, {
-        fontSize: '24px',
+      .text(512, 380, 'Final Score', {
+        fontSize: '18px',
+        color: '#64748b',
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(512, 420, `${blueScore} - ${redScore}`, {
+        fontFamily: 'Arial Black',
+        fontSize: '36px',
         color: '#94a3b8',
       })
       .setOrigin(0.5);
 
     this.add
-      .text(512, 500, 'Click to return to menu', {
+      .text(512, 460, 'Blue · Red', {
+        fontSize: '14px',
+        color: '#475569',
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(512, 520, 'Click to return to menu', {
         fontSize: '16px',
         color: '#64748b',
       })

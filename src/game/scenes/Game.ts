@@ -93,22 +93,6 @@ export class Game extends Scene {
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(512, 730, `${state.players[0].score} - ${state.players[1].score}`, {
-        fontSize: '20px',
-        color: '#94a3b8',
-      })
-      .setOrigin(0.5)
-      .setName('score-display');
-
-    this.add
-      .text(900, 50, `Turn: ${state.currentTurn}`, {
-        fontSize: '16px',
-        color: '#cbd5e1',
-      })
-      .setOrigin(0.5)
-      .setName('turn-display');
-
     EventBus.on('card-selected', this.boundOnCardSelected, this);
     EventBus.emit('game-state-changed', state);
     EventBus.emit('current-scene-ready', this);
@@ -325,23 +309,6 @@ export class Game extends Scene {
 
   private syncFromState(state: GameState) {
     this.boardGrid?.syncBoard(state.board);
-
-    const scoreDisplay = this.children.getByName(
-      'score-display'
-    ) as Phaser.GameObjects.Text;
-    if (scoreDisplay) {
-      scoreDisplay.setText(
-        `${state.players[0].score} - ${state.players[1].score}`
-      );
-    }
-
-    const turnDisplay = this.children.getByName(
-      'turn-display'
-    ) as Phaser.GameObjects.Text;
-    if (turnDisplay) {
-      turnDisplay.setText(`Turn: ${state.currentTurn}`);
-    }
-
     EventBus.emit('game-state-changed', state);
   }
 

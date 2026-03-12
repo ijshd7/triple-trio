@@ -16,7 +16,7 @@ function formatValue(v: number): string {
 
 export class CardSprite extends GameObjects.Container {
   private frame: GameObjects.Rectangle;
-  private artPlaceholder: GameObjects.Rectangle;
+  private artSprite: GameObjects.Image | GameObjects.Rectangle;
   private topText: GameObjects.Text;
   private rightText: GameObjects.Text;
   private bottomText: GameObjects.Text;
@@ -48,7 +48,7 @@ export class CardSprite extends GameObjects.Container {
     this.add(this.frame);
 
     if (options?.faceDown) {
-      this.artPlaceholder = scene.add.rectangle(
+      this.artSprite = scene.add.rectangle(
         0,
         0,
         CARD_WIDTH - 16,
@@ -56,7 +56,7 @@ export class CardSprite extends GameObjects.Container {
         0x374151,
         1
       );
-      this.add(this.artPlaceholder);
+      this.add(this.artSprite);
       this.topText = scene.add
         .text(0, 0, '?', { fontSize: '14px', color: '#9ca3af' })
         .setOrigin(0.5);
@@ -76,15 +76,23 @@ export class CardSprite extends GameObjects.Container {
         })
         .setOrigin(0.5);
     } else {
-      this.artPlaceholder = scene.add.rectangle(
-        0,
-        0,
-        CARD_WIDTH - 16,
-        CARD_HEIGHT - 40,
-        0x1f2937,
-        1
-      );
-      this.add(this.artPlaceholder);
+      const artKey = card.artworkKey;
+      const hasArtwork = scene.textures.exists(artKey);
+      if (hasArtwork) {
+        const img = scene.add.image(0, 0, artKey);
+        img.setDisplaySize(CARD_WIDTH - 16, CARD_HEIGHT - 40);
+        this.artSprite = img;
+      } else {
+        this.artSprite = scene.add.rectangle(
+          0,
+          0,
+          CARD_WIDTH - 16,
+          CARD_HEIGHT - 40,
+          0x1f2937,
+          1
+        );
+      }
+      this.add(this.artSprite);
 
       const v = card.values;
       this.topText = scene.add

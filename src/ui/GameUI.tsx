@@ -3,6 +3,8 @@ import { EventBus } from '../game/EventBus';
 import { GameState } from '../data/types';
 import { PlayerHand } from './PlayerHand';
 import { RuleDisplay } from './RuleDisplay';
+import { ScoreDisplay } from './ScoreDisplay';
+import { TurnIndicator } from './TurnIndicator';
 
 /* ──────────────────────────────────────────────────────────────
    GameUI - Wrapper for game overlay (PlayerHand, RuleDisplay, etc.)
@@ -33,6 +35,8 @@ export function GameUI({ visible }: GameUIProps) {
   return (
     <div className="game-ui-overlay">
       {gameState && <RuleDisplay activeRules={gameState.activeRules} />}
+      <ScoreDisplay gameState={gameState} />
+      <TurnIndicator gameState={gameState} />
       <PlayerHand gameState={gameState} />
     </div>
   );

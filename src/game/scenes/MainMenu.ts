@@ -18,7 +18,7 @@ export class MainMenu extends Scene {
     this.logo = this.add.image(512, 300, 'logo').setDepth(100);
 
     this.title = this.add
-      .text(512, 460, 'Main Menu', {
+      .text(512, 460, 'Triple Trio', {
         fontFamily: 'Arial Black',
         fontSize: 38,
         color: '#ffffff',
@@ -37,7 +37,7 @@ export class MainMenu extends Scene {
       this.logoTween.stop();
       this.logoTween = null;
     }
-    this.scene.start('Game', { difficulty });
+    this.scene.start('DeckSelect', { difficulty });
   }
 
   moveLogo(vueCallback: ({ x, y }: { x: number; y: number }) => void) {
