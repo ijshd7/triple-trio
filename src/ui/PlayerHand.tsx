@@ -63,6 +63,14 @@ export function PlayerHand({ gameState }: PlayerHandProps) {
     return null;
   }
 
+  if (gameState.currentTurn !== PlayerSide.Blue) {
+    return (
+      <div className="player-hand">
+        <div className="player-hand-label">Red&apos;s turn (AI thinking...)</div>
+      </div>
+    );
+  }
+
   const currentPlayer = getPlayer(gameState, gameState.currentTurn);
   const hand = currentPlayer.hand;
 

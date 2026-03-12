@@ -29,15 +29,12 @@ export class MainMenu extends Scene
         EventBus.emit('current-scene-ready', this);
     }
     
-    changeScene ()
-    {
-        if (this.logoTween)
-        {
+    changeScene(difficulty: 'easy' | 'hard' = 'easy') {
+        if (this.logoTween) {
             this.logoTween.stop();
             this.logoTween = null;
         }
-
-        this.scene.start('Game');
+        this.scene.start('Game', { difficulty });
     }
 
     moveLogo (vueCallback: ({ x, y }: { x: number, y: number }) => void)

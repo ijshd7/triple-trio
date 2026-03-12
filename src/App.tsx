@@ -3,15 +3,18 @@ import { IRefPhaserGame, PhaserGame } from './PhaserGame';
 import { MainMenu } from './game/scenes/MainMenu';
 import { GameUI } from './ui/GameUI';
 
+type AIDifficulty = 'easy' | 'hard';
+
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [currentSceneKey, setCurrentSceneKey] = useState<string>('MainMenu');
+  const [difficulty, setDifficulty] = useState<AIDifficulty>('easy');
 
   const startGame = () => {
     if (phaserRef.current?.scene) {
       const scene = phaserRef.current.scene as MainMenu;
       if (scene.scene?.key === 'MainMenu') {
-        scene.changeScene();
+        scene.changeScene(difficulty);
       }
     }
   };
@@ -30,6 +33,18 @@ function App() {
       </div>
       {currentSceneKey === 'MainMenu' && (
         <div className="menu-buttons">
+          <div className="difficulty-selector">
+            <label htmlFor="difficulty">AI Difficulty:</label>
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value as AIDifficulty)}
+              className="difficulty-select"
+            >
+              <option value="easy">Easy</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
           <button type="button" className="button" onClick={startGame}>
             Start Game
           </button>

@@ -362,11 +362,11 @@ Assets must follow this naming convention and folder structure:
 ### Phase 5 — AI Opponent
 **Goal:** Play against the computer at two difficulty levels.
 
-- [ ] Implement `GameEngine.clone()` and `getValidMoves()`
-- [ ] Implement `GreedyAI.ts`
-- [ ] Wire AI into Game scene (auto-play after player turn)
-- [ ] Implement `MinimaxAI.ts` + `BoardEvaluator.ts`
-- [ ] Add difficulty selector (Easy/Hard)
+- [x] Implement `GameEngine.clone()` and `getValidMoves()`
+- [x] Implement `GreedyAI.ts`
+- [x] Wire AI into Game scene (auto-play after player turn)
+- [x] Implement `MinimaxAI.ts` + `BoardEvaluator.ts`
+- [x] Add difficulty selector (Easy/Hard)
 
 **Deliverable:** Functional AI opponent.
 **Complexity:** Low-Medium
