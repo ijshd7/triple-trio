@@ -1,5 +1,5 @@
 import { GameObjects } from 'phaser';
-import { CardDef, CardInstance, PlayerSide } from '../../data/types';
+import { CardDef, PlayerSide } from '../../data/types';
 
 /* ──────────────────────────────────────────────────────────────
    CardSprite - Phaser Container for a Triple Trio card

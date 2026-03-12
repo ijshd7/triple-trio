@@ -1,4 +1,4 @@
-import { Board, GameState, PlayerSide } from '../data/types';
+import { GameState, PlayerSide } from '../data/types';
 import { countCardsOwnedOnBoard } from '../engine/Board';
 import { getPlayer } from '../engine/GameState';
 

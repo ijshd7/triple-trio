@@ -1,7 +1,6 @@
 import {
   GameState,
   GamePhase,
-  PlayerSide,
   RuleType,
   CardDef,
   MoveResult,

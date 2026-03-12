@@ -58,7 +58,7 @@ export class RuleEngine {
     placingPlayer: PlayerSide
   ): CaptureResult[] {
     const capturesByCell = new Map<string, CaptureResult>();
-    let sameOrPlusCaptures: CaptureResult[] = [];
+    const sameOrPlusCaptures: CaptureResult[] = [];
 
     for (const rule of this.rules) {
       const ruleCaptures = rule.evaluate(
