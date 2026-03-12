@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
-import { SFX_KEYS } from '../SoundManager';
+import { SFX_KEYS, MUSIC_KEYS } from '../SoundManager';
 import { CARDS } from '../../data/cards';
-
 export class Preloader extends Scene {
   constructor() {
     super('Preloader');
@@ -28,18 +27,36 @@ export class Preloader extends Scene {
     this.load.image('logo', 'logo.png');
     this.load.image('star', 'star.png');
 
+    // UI textures: card frames, board, cells
+    this.load.image('card-frame-blue', 'ui/card-frame-blue.png');
+    this.load.image('card-frame-red', 'ui/card-frame-red.png');
+    this.load.image('card-back', 'ui/card-back.png');
+    this.load.image('board-bg', 'ui/board-bg.png');
+    this.load.image('cell-normal', 'ui/cell-normal.png');
+    this.load.image('cell-fire', 'ui/cell-fire.png');
+    this.load.image('cell-ice', 'ui/cell-ice.png');
+    this.load.image('cell-thunder', 'ui/cell-thunder.png');
+    this.load.image('cell-earth', 'ui/cell-earth.png');
+    this.load.image('cell-water', 'ui/cell-water.png');
+    this.load.image('cell-wind', 'ui/cell-wind.png');
+    this.load.image('cell-holy', 'ui/cell-holy.png');
+    this.load.image('cell-poison', 'ui/cell-poison.png');
+
     this.load.audio(SFX_KEYS.CARD_PLACE, 'sfx/card-place.ogg');
     this.load.audio(SFX_KEYS.CARD_FLIP, 'sfx/card-flip.ogg');
     this.load.audio(SFX_KEYS.CARD_CAPTURE, 'sfx/card-capture.ogg');
     this.load.audio(SFX_KEYS.VICTORY, 'sfx/victory.ogg');
     this.load.audio(SFX_KEYS.DEFEAT, 'sfx/defeat.ogg');
+    this.load.audio(MUSIC_KEYS.BATTLE_THEME, 'music/battle-theme.ogg');
   }
 
   create() {
-    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-    //  For example, you can define global animations here, so we can use them in other scenes.
-
-    //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-    this.scene.start('MainMenu');
+    this.cameras.main.fadeOut(300, 0, 0, 0);
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      () => {
+        this.scene.start('MainMenu');
+      }
+    );
   }
 }

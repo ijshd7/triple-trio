@@ -32,7 +32,8 @@
         "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\"",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "generate-placeholders": "node scripts/generate-placeholders.cjs"
     },
     "dependencies": {
         "phaser": "^3.90.0",

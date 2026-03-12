@@ -3,6 +3,7 @@ import { EventBus } from '../game/EventBus';
 import { CARDS } from '../data/cards';
 import type { CardDef } from '../data/types';
 import { Element, Rarity } from '../data/types';
+import { ELEMENT_NAMES } from '../data/elements';
 
 /* ──────────────────────────────────────────────────────────────
    DeckSelectUI - Card selection for pre-game hand
@@ -29,26 +30,52 @@ interface DeckCardProps {
 }
 
 function DeckCard({ card, selected, onClick, disabled }: DeckCardProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   const v = card.values;
   return (
-    <button
-      type="button"
-      className={`deck-select-card ${selected ? 'selected' : ''}`}
-      onClick={onClick}
-      disabled={disabled}
+    <div
+      className="deck-select-card-wrapper"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
     >
-      <div className="deck-select-card-name">{card.name}</div>
-      <div className="deck-select-card-rarity">
-        {RARITY_LABELS[card.rarity]}
-        {card.element !== Element.None && ` · ${Element[card.element]}`}
-      </div>
-      <div className="deck-select-card-values">
-        <span className="value-top">{formatValue(v.top)}</span>
-        <span className="value-right">{formatValue(v.right)}</span>
-        <span className="value-bottom">{formatValue(v.bottom)}</span>
-        <span className="value-left">{formatValue(v.left)}</span>
-      </div>
-    </button>
+      <button
+        type="button"
+        className={`deck-select-card ${selected ? 'selected' : ''}`}
+        onClick={onClick}
+        disabled={disabled}
+        title={`${card.name} - ${RARITY_LABELS[card.rarity]}${
+          card.element !== Element.None ? ` · ${ELEMENT_NAMES[card.element]}` : ''
+        }${card.lore ? `\n${card.lore}` : ''}`}
+      >
+        <div className="deck-select-card-name">{card.name}</div>
+        <div className="deck-select-card-rarity">
+          {RARITY_LABELS[card.rarity]}
+          {card.element !== Element.None && ` · ${Element[card.element]}`}
+        </div>
+        <div className="deck-select-card-values">
+          <span className="value-top">{formatValue(v.top)}</span>
+          <span className="value-right">{formatValue(v.right)}</span>
+          <span className="value-bottom">{formatValue(v.bottom)}</span>
+          <span className="value-left">{formatValue(v.left)}</span>
+        </div>
+      </button>
+      {showTooltip && (
+        <div className="card-tooltip deck-select-tooltip">
+          <div className="card-tooltip-name">{card.name}</div>
+          <div className="card-tooltip-values">
+            ↑{formatValue(v.top)} →{formatValue(v.right)} ↓{formatValue(v.bottom)}{' '}
+            ←{formatValue(v.left)}
+          </div>
+          <div className="card-tooltip-rarity">
+            {RARITY_LABELS[card.rarity]}
+            {card.element !== Element.None && ` · ${ELEMENT_NAMES[card.element]}`}
+          </div>
+          {card.lore && (
+            <div className="card-tooltip-lore">{card.lore}</div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

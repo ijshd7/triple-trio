@@ -1,6 +1,7 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 import { PlayerSide } from '../../data/types';
+import { stopMusic } from '../SoundManager';
 
 export class GameOver extends Scene {
   private gameOverData: {
@@ -24,6 +25,8 @@ export class GameOver extends Scene {
   create() {
     const { winner = 'draw', blueScore = 0, redScore = 0 } = this.gameOverData;
 
+    stopMusic(this);
+    this.cameras.main.fadeIn(400);
     this.cameras.main.setBackgroundColor(0x0f172a);
 
     const winnerText =
@@ -73,7 +76,13 @@ export class GameOver extends Scene {
       })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => this.scene.start('MainMenu'));
+      .on('pointerdown', () => {
+        this.cameras.main.fadeOut(400, 0, 0, 0);
+        this.cameras.main.once(
+          Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+          () => this.scene.start('MainMenu')
+        );
+      });
 
     EventBus.emit('current-scene-ready', this);
   }

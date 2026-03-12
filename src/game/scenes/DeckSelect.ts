@@ -21,6 +21,7 @@ export class DeckSelect extends Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(400);
     this.cameras.main.setBackgroundColor(0x0f172a);
 
     this.add
@@ -54,11 +55,17 @@ export class DeckSelect extends Scene {
       }
 
       EventBus.off('deck-confirm', onDeckConfirm);
-      this.scene.start('Game', {
-        blueHand,
-        redHand,
-        difficulty: this.difficulty,
-      });
+      this.cameras.main.fadeOut(400, 0, 0, 0);
+      this.cameras.main.once(
+        Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+        () => {
+          this.scene.start('Game', {
+            blueHand,
+            redHand,
+            difficulty: this.difficulty,
+          });
+        }
+      );
     };
 
     EventBus.on('deck-confirm', onDeckConfirm);

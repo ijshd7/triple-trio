@@ -24,10 +24,22 @@ const ELEMENT_COLORS: Record<Element, number> = {
   [Element.Poison]: 0x3f1d38,
 };
 
+const ELEMENT_TEXTURE_KEYS: Record<Element, string> = {
+  [Element.None]: 'cell-normal',
+  [Element.Fire]: 'cell-fire',
+  [Element.Ice]: 'cell-ice',
+  [Element.Thunder]: 'cell-thunder',
+  [Element.Earth]: 'cell-earth',
+  [Element.Water]: 'cell-water',
+  [Element.Wind]: 'cell-wind',
+  [Element.Holy]: 'cell-holy',
+  [Element.Poison]: 'cell-poison',
+};
+
 export type CellClickCallback = (row: number, col: number) => void;
 
 export class BoardGrid extends GameObjects.Container {
-  private cells: GameObjects.Rectangle[][] = [];
+  private cells: (GameObjects.Image | GameObjects.Rectangle)[][] = [];
   private cardSprites: Map<string, CardSprite> = new Map();
   private onCellClick: CellClickCallback | null = null;
 
@@ -38,21 +50,30 @@ export class BoardGrid extends GameObjects.Container {
   }
 
   private createGrid(): void {
+    const hasCellTexture = this.scene.textures.exists('cell-normal');
+    const defaultColor = ELEMENT_COLORS[Element.None];
+
     for (let row = 0; row < 3; row++) {
       this.cells[row] = [];
       for (let col = 0; col < 3; col++) {
         const x = BOARD_OFFSET_X + col * CELL_SIZE + CELL_SIZE / 2;
         const y = BOARD_OFFSET_Y + row * CELL_SIZE + CELL_SIZE / 2;
 
-        const cellBg = this.scene.add.rectangle(
-          x,
-          y,
-          CELL_SIZE - 4,
-          CELL_SIZE - 4,
-          0x1e3a5f,
-          1
-        );
-        cellBg.setStrokeStyle(2, 0x3b82f6);
+        let cellBg: GameObjects.Image | GameObjects.Rectangle;
+        if (hasCellTexture) {
+          cellBg = this.scene.add.image(x, y, 'cell-normal');
+          cellBg.setDisplaySize(CELL_SIZE - 4, CELL_SIZE - 4);
+        } else {
+          cellBg = this.scene.add.rectangle(
+            x,
+            y,
+            CELL_SIZE - 4,
+            CELL_SIZE - 4,
+            defaultColor,
+            1
+          );
+          (cellBg as GameObjects.Rectangle).setStrokeStyle(2, 0x3b82f6);
+        }
         cellBg.setInteractive({ useHandCursor: true });
 
         const row_ = row;
@@ -62,10 +83,14 @@ export class BoardGrid extends GameObjects.Container {
         });
 
         cellBg.on('pointerover', () => {
-          cellBg.setStrokeStyle(3, 0x60a5fa);
+          if (cellBg instanceof GameObjects.Rectangle) {
+            cellBg.setStrokeStyle(3, 0x60a5fa);
+          }
         });
         cellBg.on('pointerout', () => {
-          cellBg.setStrokeStyle(2, 0x3b82f6);
+          if (cellBg instanceof GameObjects.Rectangle) {
+            cellBg.setStrokeStyle(2, 0x3b82f6);
+          }
         });
 
         this.add(cellBg);
@@ -87,11 +112,19 @@ export class BoardGrid extends GameObjects.Container {
         const cell = board[row][col];
         const key = `${row},${col}`;
 
-        const cellRect = this.cells[row]?.[col];
-        if (cellRect) {
+        const cellBg = this.cells[row]?.[col];
+        if (cellBg) {
+          const textureKey = ELEMENT_TEXTURE_KEYS[cell.element] ?? 'cell-normal';
           const color =
             ELEMENT_COLORS[cell.element] ?? ELEMENT_COLORS[Element.None];
-          cellRect.setFillStyle(color);
+          if (
+            cellBg instanceof GameObjects.Image &&
+            this.scene.textures.exists(textureKey)
+          ) {
+            cellBg.setTexture(textureKey);
+          } else if (cellBg instanceof GameObjects.Rectangle) {
+            cellBg.setFillStyle(color);
+          }
         }
 
         if (cell.card) {

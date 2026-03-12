@@ -1,5 +1,6 @@
 import { GameObjects } from 'phaser';
 import { CardDef, PlayerSide } from '../../data/types';
+import { ELEMENT_NAMES } from '../../data/elements';
 
 /* ──────────────────────────────────────────────────────────────
    CardSprite - Phaser Container for a Triple Trio card
@@ -14,14 +15,20 @@ function formatValue(v: number): string {
   return v === 10 ? 'A' : String(v);
 }
 
+const FRAME_KEYS = {
+  [PlayerSide.Blue]: 'card-frame-blue',
+  [PlayerSide.Red]: 'card-frame-red',
+} as const;
+
 export class CardSprite extends GameObjects.Container {
-  private frame: GameObjects.Rectangle;
+  private frame: GameObjects.Image | GameObjects.Rectangle;
   private artSprite: GameObjects.Image | GameObjects.Rectangle;
   private topText: GameObjects.Text;
   private rightText: GameObjects.Text;
   private bottomText: GameObjects.Text;
   private leftText: GameObjects.Text;
   private nameText: GameObjects.Text;
+  private tooltipContainer: GameObjects.Container | null = null;
 
   constructor(
     scene: Phaser.Scene,
@@ -35,27 +42,40 @@ export class CardSprite extends GameObjects.Container {
 
     const frameColor = owner === PlayerSide.Blue ? 0x2563eb : 0xdc2626;
     const borderColor = owner === PlayerSide.Blue ? 0x1d4ed8 : 0xb91c1c;
+    const frameKey = FRAME_KEYS[owner];
+    const hasFrameTexture = scene.textures.exists(frameKey);
 
-    this.frame = scene.add.rectangle(
-      0,
-      0,
-      CARD_WIDTH,
-      CARD_HEIGHT,
-      frameColor,
-      1
-    );
-    this.frame.setStrokeStyle(3, borderColor);
+    if (hasFrameTexture) {
+      this.frame = scene.add.image(0, 0, frameKey);
+      this.frame.setDisplaySize(CARD_WIDTH, CARD_HEIGHT);
+    } else {
+      this.frame = scene.add.rectangle(
+        0,
+        0,
+        CARD_WIDTH,
+        CARD_HEIGHT,
+        frameColor,
+        1
+      );
+      (this.frame as GameObjects.Rectangle).setStrokeStyle(3, borderColor);
+    }
     this.add(this.frame);
 
     if (options?.faceDown) {
-      this.artSprite = scene.add.rectangle(
-        0,
-        0,
-        CARD_WIDTH - 16,
-        CARD_HEIGHT - 40,
-        0x374151,
-        1
-      );
+      const hasCardBack = scene.textures.exists('card-back');
+      if (hasCardBack) {
+        this.artSprite = scene.add.image(0, 0, 'card-back');
+        this.artSprite.setDisplaySize(CARD_WIDTH - 16, CARD_HEIGHT - 40);
+      } else {
+        this.artSprite = scene.add.rectangle(
+          0,
+          0,
+          CARD_WIDTH - 16,
+          CARD_HEIGHT - 40,
+          0x374151,
+          1
+        );
+      }
       this.add(this.artSprite);
       this.topText = scene.add
         .text(0, 0, '?', { fontSize: '14px', color: '#9ca3af' })
@@ -133,8 +153,53 @@ export class CardSprite extends GameObjects.Container {
     this.add(this.leftText);
     this.add(this.nameText);
 
+    if (!options?.faceDown) {
+      this.tooltipContainer = this.createTooltip(scene, card);
+      this.add(this.tooltipContainer);
+      this.on('pointerover', () => {
+        if (this.tooltipContainer) this.tooltipContainer.setVisible(true);
+        this.setDepth(100);
+      });
+      this.on('pointerout', () => {
+        if (this.tooltipContainer) this.tooltipContainer.setVisible(false);
+        this.setDepth(0);
+      });
+    }
+
     this.setSize(CARD_WIDTH, CARD_HEIGHT);
     this.setInteractive({ useHandCursor: true });
+  }
+
+  private createTooltip(scene: Phaser.Scene, card: CardDef): GameObjects.Container {
+    const tooltip = scene.add.container(0, -CARD_HEIGHT / 2 - 50);
+    const bg = scene.add.rectangle(0, 0, 120, 70, 0x0f172a, 0.95);
+    bg.setStrokeStyle(1, 0x334155);
+    tooltip.add(bg);
+    const nameText = scene.add
+      .text(0, -22, card.name, { fontSize: '12px', color: '#f8fafc' })
+      .setOrigin(0.5);
+    tooltip.add(nameText);
+    const v = card.values;
+    const valuesText = scene.add
+      .text(
+        0,
+        -6,
+        `↑${formatValue(v.top)} →${formatValue(v.right)} ↓${formatValue(v.bottom)} ←${formatValue(v.left)}`,
+        { fontSize: '10px', color: '#94a3b8' }
+      )
+      .setOrigin(0.5);
+    tooltip.add(valuesText);
+    if (card.element !== 0) {
+      const elText = scene.add
+        .text(0, 10, ELEMENT_NAMES[card.element], {
+          fontSize: '10px',
+          color: '#64748b',
+        })
+        .setOrigin(0.5);
+      tooltip.add(elText);
+    }
+    tooltip.setVisible(false);
+    return tooltip;
   }
 
   static get width(): number {
@@ -146,12 +211,17 @@ export class CardSprite extends GameObjects.Container {
   }
 
   /**
-   * Update owner (e.g. after capture) - changes frame color.
+   * Update owner (e.g. after capture) - changes frame color/texture.
    */
   setOwner(owner: PlayerSide): void {
-    const frameColor = owner === PlayerSide.Blue ? 0x2563eb : 0xdc2626;
-    const borderColor = owner === PlayerSide.Blue ? 0x1d4ed8 : 0xb91c1c;
-    this.frame.setFillStyle(frameColor);
-    this.frame.setStrokeStyle(3, borderColor);
+    const frameKey = FRAME_KEYS[owner];
+    if (this.frame instanceof GameObjects.Image && this.scene.textures.exists(frameKey)) {
+      this.frame.setTexture(frameKey);
+    } else if (this.frame instanceof GameObjects.Rectangle) {
+      const frameColor = owner === PlayerSide.Blue ? 0x2563eb : 0xdc2626;
+      const borderColor = owner === PlayerSide.Blue ? 0x1d4ed8 : 0xb91c1c;
+      this.frame.setFillStyle(frameColor);
+      this.frame.setStrokeStyle(3, borderColor);
+    }
   }
 }

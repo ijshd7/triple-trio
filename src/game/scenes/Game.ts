@@ -20,8 +20,7 @@ import {
   animateComboChain,
 } from '../animations/CardAnimations';
 import { BoardGrid as BoardGridStatic } from '../objects/BoardGrid';
-import { playSfx } from '../SoundManager';
-import { SFX_KEYS } from '../SoundManager';
+import { playSfx, playMusic, SFX_KEYS, MUSIC_KEYS } from '../SoundManager';
 import { GreedyAI } from '../../ai/GreedyAI';
 import { MinimaxAI } from '../../ai/MinimaxAI';
 import { AIPlayer } from '../../ai/AIPlayer';
@@ -73,11 +72,17 @@ export class Game extends Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(400);
     this.cameras.main.setBackgroundColor(0x0f172a);
 
     if (!this.engine) return;
 
     const state = this.engine.getState();
+
+    if (this.textures.exists('board-bg')) {
+      const bg = this.add.image(512, 384, 'board-bg');
+      bg.setDepth(-1);
+    }
 
     this.boardGrid = new BoardGrid(this, (row, col) => {
       void this.onCellClick(row, col);
@@ -96,6 +101,8 @@ export class Game extends Scene {
     EventBus.on('card-selected', this.boundOnCardSelected, this);
     EventBus.emit('game-state-changed', state);
     EventBus.emit('current-scene-ready', this);
+
+    playMusic(this, MUSIC_KEYS.BATTLE_THEME, true);
   }
 
   private onCardSelected(handIndex: number) {
@@ -198,17 +205,27 @@ export class Game extends Scene {
             ? SFX_KEYS.VICTORY
             : SFX_KEYS.DEFEAT
       );
-      this.scene.start('GameOver', {
-        winner: newState.winner,
-        blueScore: newState.players[0].score,
-        redScore: newState.players[1].score,
-      });
+      this.transitionToGameOver(newState);
     } else {
       EventBus.emit('game-state-changed', newState);
       if (newState.currentTurn === PlayerSide.Red && this.redAI) {
         this.time.delayedCall(500, () => this.executeAITurn());
       }
     }
+  }
+
+  private transitionToGameOver(state: GameState) {
+    this.cameras.main.fadeOut(400, 0, 0, 0);
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      () => {
+        this.scene.start('GameOver', {
+          winner: state.winner,
+          blueScore: state.players[0].score,
+          redScore: state.players[1].score,
+        });
+      }
+    );
   }
 
   private async executeAITurn() {
@@ -297,11 +314,7 @@ export class Game extends Scene {
             ? SFX_KEYS.VICTORY
             : SFX_KEYS.DEFEAT
       );
-      this.scene.start('GameOver', {
-        winner: newState.winner,
-        blueScore: newState.players[0].score,
-        redScore: newState.players[1].score,
-      });
+      this.transitionToGameOver(newState);
     } else {
       EventBus.emit('game-state-changed', newState);
     }

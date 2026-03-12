@@ -13,6 +13,7 @@ export class MainMenu extends Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(400);
     this.background = this.add.image(512, 384, 'background');
 
     this.logo = this.add.image(512, 300, 'logo').setDepth(100);
@@ -37,7 +38,13 @@ export class MainMenu extends Scene {
       this.logoTween.stop();
       this.logoTween = null;
     }
-    this.scene.start('DeckSelect', { difficulty });
+    this.cameras.main.fadeOut(400, 0, 0, 0);
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      () => {
+        this.scene.start('DeckSelect', { difficulty });
+      }
+    );
   }
 
   moveLogo(vueCallback: ({ x, y }: { x: number; y: number }) => void) {
