@@ -44,7 +44,9 @@ function DeckCard({ card, selected, onClick, disabled }: DeckCardProps) {
         onClick={onClick}
         disabled={disabled}
         title={`${card.name} - ${RARITY_LABELS[card.rarity]}${
-          card.element !== Element.None ? ` · ${ELEMENT_NAMES[card.element]}` : ''
+          card.element !== Element.None
+            ? ` · ${ELEMENT_NAMES[card.element]}`
+            : ''
         }${card.lore ? `\n${card.lore}` : ''}`}
       >
         <div className="deck-select-card-name">{card.name}</div>
@@ -63,16 +65,15 @@ function DeckCard({ card, selected, onClick, disabled }: DeckCardProps) {
         <div className="card-tooltip deck-select-tooltip">
           <div className="card-tooltip-name">{card.name}</div>
           <div className="card-tooltip-values">
-            ↑{formatValue(v.top)} →{formatValue(v.right)} ↓{formatValue(v.bottom)}{' '}
-            ←{formatValue(v.left)}
+            ↑{formatValue(v.top)} →{formatValue(v.right)} ↓
+            {formatValue(v.bottom)} ←{formatValue(v.left)}
           </div>
           <div className="card-tooltip-rarity">
             {RARITY_LABELS[card.rarity]}
-            {card.element !== Element.None && ` · ${ELEMENT_NAMES[card.element]}`}
+            {card.element !== Element.None &&
+              ` · ${ELEMENT_NAMES[card.element]}`}
           </div>
-          {card.lore && (
-            <div className="card-tooltip-lore">{card.lore}</div>
-          )}
+          {card.lore && <div className="card-tooltip-lore">{card.lore}</div>}
         </div>
       )}
     </div>

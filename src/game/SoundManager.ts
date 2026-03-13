@@ -31,11 +31,7 @@ export function playSfx(scene: Phaser.Scene, key: string): void {
 /**
  * Play background music. No-op if not loaded or audio locked.
  */
-export function playMusic(
-  scene: Phaser.Scene,
-  key: string,
-  loop = true
-): void {
+export function playMusic(scene: Phaser.Scene, key: string, loop = true): void {
   try {
     if (!scene.sound.locked) {
       scene.sound.play(key, { loop });

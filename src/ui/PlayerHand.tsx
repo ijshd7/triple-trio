@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { EventBus } from '../game/EventBus';
-import { GameState, CardDef, Element, PlayerSide, GamePhase } from '../data/types';
+import {
+  GameState,
+  CardDef,
+  Element,
+  PlayerSide,
+  GamePhase,
+} from '../data/types';
 import { getPlayer } from '../engine/GameState';
 import { ELEMENT_NAMES } from '../data/elements';
 
@@ -52,7 +58,9 @@ function CardDisplay({ card, owner, selected, onClick }: CardDisplayProps) {
         <div className="player-hand-card-values">
           <span className="value-top">{formatValue(card.values.top)}</span>
           <span className="value-right">{formatValue(card.values.right)}</span>
-          <span className="value-bottom">{formatValue(card.values.bottom)}</span>
+          <span className="value-bottom">
+            {formatValue(card.values.bottom)}
+          </span>
           <span className="value-left">{formatValue(card.values.left)}</span>
         </div>
       </button>
@@ -68,9 +76,7 @@ function CardDisplay({ card, owner, selected, onClick }: CardDisplayProps) {
               {ELEMENT_NAMES[card.element]}
             </div>
           )}
-          {card.lore && (
-            <div className="card-tooltip-lore">{card.lore}</div>
-          )}
+          {card.lore && <div className="card-tooltip-lore">{card.lore}</div>}
         </div>
       )}
     </div>

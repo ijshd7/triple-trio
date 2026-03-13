@@ -72,7 +72,7 @@ export class BoardGrid extends GameObjects.Container {
             defaultColor,
             1
           );
-          (cellBg).setStrokeStyle(2, 0x3b82f6);
+          cellBg.setStrokeStyle(2, 0x3b82f6);
         }
         cellBg.setInteractive({ useHandCursor: true });
 
@@ -114,7 +114,8 @@ export class BoardGrid extends GameObjects.Container {
 
         const cellBg = this.cells[row]?.[col];
         if (cellBg) {
-          const textureKey = ELEMENT_TEXTURE_KEYS[cell.element] ?? 'cell-normal';
+          const textureKey =
+            ELEMENT_TEXTURE_KEYS[cell.element] ?? 'cell-normal';
           const color =
             ELEMENT_COLORS[cell.element] ?? ELEMENT_COLORS[Element.None];
           if (

@@ -57,7 +57,7 @@ export class CardSprite extends GameObjects.Container {
         frameColor,
         1
       );
-      (this.frame).setStrokeStyle(3, borderColor);
+      this.frame.setStrokeStyle(3, borderColor);
     }
     this.add(this.frame);
 
@@ -170,7 +170,10 @@ export class CardSprite extends GameObjects.Container {
     this.setInteractive({ useHandCursor: true });
   }
 
-  private createTooltip(scene: Phaser.Scene, card: CardDef): GameObjects.Container {
+  private createTooltip(
+    scene: Phaser.Scene,
+    card: CardDef
+  ): GameObjects.Container {
     const tooltip = scene.add.container(0, -CARD_HEIGHT / 2 - 50);
     const bg = scene.add.rectangle(0, 0, 120, 70, 0x0f172a, 0.95);
     bg.setStrokeStyle(1, 0x334155);
@@ -215,7 +218,10 @@ export class CardSprite extends GameObjects.Container {
    */
   setOwner(owner: PlayerSide): void {
     const frameKey = FRAME_KEYS[owner];
-    if (this.frame instanceof GameObjects.Image && this.scene.textures.exists(frameKey)) {
+    if (
+      this.frame instanceof GameObjects.Image &&
+      this.scene.textures.exists(frameKey)
+    ) {
       this.frame.setTexture(frameKey);
     } else if (this.frame instanceof GameObjects.Rectangle) {
       const frameColor = owner === PlayerSide.Blue ? 0x2563eb : 0xdc2626;
