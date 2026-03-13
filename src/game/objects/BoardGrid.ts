@@ -72,7 +72,7 @@ export class BoardGrid extends GameObjects.Container {
             defaultColor,
             1
           );
-          (cellBg as GameObjects.Rectangle).setStrokeStyle(2, 0x3b82f6);
+          (cellBg).setStrokeStyle(2, 0x3b82f6);
         }
         cellBg.setInteractive({ useHandCursor: true });
 

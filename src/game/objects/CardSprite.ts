@@ -1,5 +1,5 @@
 import { GameObjects } from 'phaser';
-import { CardDef, PlayerSide } from '../../data/types';
+import { CardDef, Element, PlayerSide } from '../../data/types';
 import { ELEMENT_NAMES } from '../../data/elements';
 
 /* ──────────────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ export class CardSprite extends GameObjects.Container {
         frameColor,
         1
       );
-      (this.frame as GameObjects.Rectangle).setStrokeStyle(3, borderColor);
+      (this.frame).setStrokeStyle(3, borderColor);
     }
     this.add(this.frame);
 
@@ -189,7 +189,7 @@ export class CardSprite extends GameObjects.Container {
       )
       .setOrigin(0.5);
     tooltip.add(valuesText);
-    if (card.element !== 0) {
+    if (card.element !== Element.None) {
       const elText = scene.add
         .text(0, 10, ELEMENT_NAMES[card.element], {
           fontSize: '10px',

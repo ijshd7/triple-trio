@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { EventBus } from '../game/EventBus';
-import { GameState, CardDef, PlayerSide, GamePhase } from '../data/types';
+import { GameState, CardDef, Element, PlayerSide, GamePhase } from '../data/types';
 import { getPlayer } from '../engine/GameState';
 import { ELEMENT_NAMES } from '../data/elements';
 
@@ -17,7 +17,7 @@ function buildCardTooltip(card: CardDef): string {
   const v = card.values;
   const values = `↑${formatValue(v.top)} →${formatValue(v.right)} ↓${formatValue(v.bottom)} ←${formatValue(v.left)}`;
   const element =
-    card.element !== 0 ? ` · ${ELEMENT_NAMES[card.element]}` : '';
+    card.element !== Element.None ? ` · ${ELEMENT_NAMES[card.element]}` : '';
   const lore = card.lore ? `\n${card.lore}` : '';
   return `${card.name}\n${values}${element}${lore}`;
 }
@@ -63,7 +63,7 @@ function CardDisplay({ card, owner, selected, onClick }: CardDisplayProps) {
             ↑{formatValue(card.values.top)} →{formatValue(card.values.right)} ↓
             {formatValue(card.values.bottom)} ←{formatValue(card.values.left)}
           </div>
-          {card.element !== 0 && (
+          {card.element !== Element.None && (
             <div className="card-tooltip-element">
               {ELEMENT_NAMES[card.element]}
             </div>
