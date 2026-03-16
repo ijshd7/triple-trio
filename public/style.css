@@ -178,7 +178,33 @@ body {
     align-items: center;
     justify-content: center;
     padding: 8px;
+    position: relative;
+    overflow: hidden;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.player-hand-card-art {
+    position: absolute;
+    inset: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    object-fit: cover;
+    border-radius: 4px;
+    opacity: 0.85;
+}
+
+.player-hand-card-name,
+.player-hand-card-values {
+    position: relative;
+    z-index: 1;
+}
+
+.player-hand-card-name {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.player-hand-card-values span {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .player-hand-card:hover {

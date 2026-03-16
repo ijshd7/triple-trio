@@ -54,6 +54,11 @@ function CardDisplay({ card, owner, selected, onClick }: CardDisplayProps) {
           boxShadow: selected ? `0 0 12px ${frameColor}` : undefined,
         }}
       >
+        <img
+          className="player-hand-card-art"
+          src={`cards/${card.artworkKey}.png`}
+          alt={card.name}
+        />
         <div className="player-hand-card-name">{card.name}</div>
         <div className="player-hand-card-values">
           <span className="value-top">{formatValue(card.values.top)}</span>
