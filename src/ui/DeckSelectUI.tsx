@@ -49,6 +49,11 @@ function DeckCard({ card, selected, onClick, disabled }: DeckCardProps) {
             : ''
         }${card.lore ? `\n${card.lore}` : ''}`}
       >
+        <img
+          className="deck-select-card-art"
+          src={`cards/${card.artworkKey}.png`}
+          alt={card.name}
+        />
         <div className="deck-select-card-name">{card.name}</div>
         <div className="deck-select-card-rarity">
           {RARITY_LABELS[card.rarity]}

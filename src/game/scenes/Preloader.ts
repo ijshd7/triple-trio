@@ -24,8 +24,6 @@ export class Preloader extends Scene {
     }
 
     this.load.setPath('assets');
-    this.load.image('logo', 'logo.png');
-    this.load.image('star', 'star.png');
 
     // UI textures: card frames, board, cells
     this.load.image('card-frame-blue', 'ui/card-frame-blue.png');

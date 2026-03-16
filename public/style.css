@@ -169,15 +169,14 @@ body {
 .player-hand-card {
     width: 100px;
     height: 140px;
-    background: #1e293b;
+    background: #0f172a;
     border: 3px solid;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
+    align-items: stretch;
+    padding: 0;
     position: relative;
     overflow: hidden;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -185,26 +184,72 @@ body {
 
 .player-hand-card-art {
     position: absolute;
-    inset: 8px;
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 4px;
-    opacity: 0.85;
-}
-
-.player-hand-card-name,
-.player-hand-card-values {
-    position: relative;
-    z-index: 1;
 }
 
 .player-hand-card-name {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    position: relative;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.85);
+    font-size: 11px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: center;
+    padding: 4px 4px 3px;
+    line-height: 1.2;
 }
 
-.player-hand-card-values span {
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
+.player-hand-card-values {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.85);
+    height: 50px;
+}
+
+.player-hand-card-values .value-top {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-right {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-bottom {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-hand-card-values .value-left {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .player-hand-card:hover {
@@ -214,60 +259,6 @@ body {
 
 .player-hand-card.selected {
     transform: scale(1.08);
-}
-
-.player-hand-card-name {
-    font-size: 10px;
-    color: #d1d5db;
-    margin-bottom: 8px;
-    text-align: center;
-    line-height: 1.2;
-}
-
-.player-hand-card-values {
-    position: relative;
-    width: 60px;
-    height: 60px;
-}
-
-.player-hand-card-values .value-top {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.player-hand-card-values .value-right {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.player-hand-card-values .value-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.player-hand-card-values .value-left {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
 }
 
 .menu-buttons {
@@ -368,16 +359,25 @@ body {
 .deck-select-card {
     width: 100px;
     height: 130px;
-    background: #1e293b;
+    background: #0f172a;
     border: 3px solid #475569;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
+    align-items: stretch;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
     transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.deck-select-card-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .deck-select-card:hover:not(:disabled) {
@@ -396,39 +396,76 @@ body {
 }
 
 .deck-select-card-name {
+    position: relative;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.85);
     font-size: 11px;
+    font-weight: 600;
     color: #e2e8f0;
-    margin-bottom: 4px;
     text-align: center;
+    padding: 3px 4px 2px;
     line-height: 1.2;
 }
 
 .deck-select-card-rarity {
-    font-size: 9px;
-    color: #64748b;
-    margin-bottom: 6px;
+    position: relative;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.7);
+    font-size: 8px;
+    color: #94a3b8;
+    text-align: center;
+    padding: 1px 4px 2px;
 }
 
 .deck-select-card-values {
-    position: relative;
-    width: 50px;
-    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.85);
+    height: 44px;
 }
 
-.deck-select-card-values .value-top,
-.deck-select-card-values .value-right,
-.deck-select-card-values .value-bottom,
-.deck-select-card-values .value-left {
+.deck-select-card-values .value-top {
     position: absolute;
+    top: 1px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 12px;
     font-weight: bold;
-    color: #94a3b8;
+    color: #fff;
 }
 
-.deck-select-card-values .value-top { top: 0; left: 50%; transform: translateX(-50%); }
-.deck-select-card-values .value-right { right: 0; top: 50%; transform: translateY(-50%); }
-.deck-select-card-values .value-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
-.deck-select-card-values .value-left { left: 0; top: 50%; transform: translateY(-50%); }
+.deck-select-card-values .value-right {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.deck-select-card-values .value-bottom {
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.deck-select-card-values .value-left {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
 
 .deck-select-footer {
     margin-top: 24px;
